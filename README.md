@@ -1,0 +1,3 @@
+# getchvim
+
+my neovim config
