@@ -1,3 +1,4 @@
 .direnv
 result*
 repl-result-out*
+.luarc.json
