@@ -20,6 +20,13 @@
 
     forAllSystems = fn: lib.genAttrs systems (sys: fn nixpkgs.legacyPackages.${sys});
   in {
+    checks = forAllSystems (pkgs: {
+      stylua = pkgs.runCommand "stylua-check" {nativeBuildInputs = [pkgs.stylua];} ''
+        stylua -c ${self}
+        touch $out
+      '';
+    });
+
     devShells = forAllSystems (pkgs: {
       default = import ./shell.nix {inherit pkgs;};
     });

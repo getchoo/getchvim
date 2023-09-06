@@ -36,6 +36,9 @@ require("cmp").setup({
 	}),
 })
 
+---- gitsigns
+require("gitsigns").setup()
+
 ---- fidget
 require("fidget").setup()
 
@@ -152,9 +155,28 @@ local formatting_on_attach = function(client, bufnr)
 	end
 end
 
+require("mini.comment").setup({
+	options = {
+		custom_commentstring = function()
+			return require("ts_context_commentstring.internal").calculate_commentstring()
+				or vim.bo.context_commentstring
+		end,
+	},
+})
+
 require("null-ls").setup({
 	on_attach = formatting_on_attach,
 	sources = sources.null_ls,
+})
+
+require("nvim-treesitter.configs").setup({
+	auto_install = false,
+	highlight = { enable = true },
+	indent = { enable = true },
+	context_commentstring = {
+		enable = true,
+		enable_autocmd = false,
+	},
 })
 
 ---- trouble

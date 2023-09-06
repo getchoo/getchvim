@@ -6,7 +6,8 @@ opt.tabstop = 2
 opt.shiftwidth = 2
 opt.expandtab = false
 opt.smartindent = true
-opt.wrap = false
+opt.wrap = true
+opt.relativenumer = true
 
 -- appearance
 opt.syntax = "on"
@@ -14,8 +15,4 @@ cmd("filetype plugin indent on")
 opt.termguicolors = true
 
 require("getchoo.keybinds")
-require("getchoo.filetypes")
-
-if vim.g.no_plugins then
-	require("getchoo.plugins")
-end
+require("getchoo.plugins")
