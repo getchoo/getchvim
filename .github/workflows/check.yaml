@@ -1,0 +1,25 @@
+name: run checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: stylua
+        run:
+          nix build -L .#checks.x86_64-linux.stylua
+
+      - name: flake check
+        run: nix flake check --accept-flake-config
