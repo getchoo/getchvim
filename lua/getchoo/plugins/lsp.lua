@@ -170,7 +170,7 @@ require("null-ls").setup({
 })
 
 require("nvim-treesitter.configs").setup({
-	auto_install = false,
+	auto_install = (not vim.g.auto_install == nil) and vim.g.auto_install,
 	highlight = { enable = true },
 	indent = { enable = true },
 	context_commentstring = {
