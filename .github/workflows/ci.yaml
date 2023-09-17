@@ -1,0 +1,59 @@
+name: ci
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            arch:
+              - "aarch64"
+              - "x86_64"
+
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup qemu
+        if: matrix.arch == 'aarch64'
+        run: sudo apt install -y qemu-user-static
+
+      - name: install nix
+        if: matrix.arch != 'aarch64'
+        uses: DeterminateSystems/nix-installer-action@v4
+
+      - name: install nix (with aarch64)
+        if: matrix.arch == 'aarch64'
+        uses: DeterminateSystems/nix-installer-action@v4
+        with:
+          extra-conf: "extra-platforms = aarch64-linux arm-linux"
+
+      - name: setup cache
+        uses: DeterminateSystems/magic-nix-cache-action@v2
+
+      - name: run build
+        run: nix build --accept-flake-config -Lv
+
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install nix
+        uses: DeterminateSystems/nix-installer-action@v4
+
+      - name: setup cache
+        uses: DeterminateSystems/magic-nix-cache-action@v2
+
+      - name: run check
+        run: nix flake check --accept-flake-config -Lv

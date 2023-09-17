@@ -1,52 +1,92 @@
 {
   description = "getchoo's neovim config";
 
-  inputs.nixpkgs.url = "nixpkgs/nixos-unstable";
+  inputs = {
+    nixpkgs.url = "nixpkgs/nixos-unstable";
 
-  outputs = {
-    self,
-    nixpkgs,
-    ...
-  }: let
-    inherit (nixpkgs) lib;
-    version = builtins.substring 0 8 self.lastModifiedDate or "dirty";
-
-    systems = [
-      "x86_64-linux"
-      "aarch64-linux"
-      "x86_64-darwin"
-      "aarch64-darwin"
-    ];
-
-    forAllSystems = fn: lib.genAttrs systems (sys: fn nixpkgs.legacyPackages.${sys});
-  in {
-    checks = forAllSystems (pkgs: {
-      stylua = pkgs.runCommand "stylua-check" {nativeBuildInputs = [pkgs.stylua];} ''
-        stylua -c ${self}
-        touch $out
-      '';
-    });
-
-    devShells = forAllSystems (pkgs: {
-      default = import ./shell.nix {inherit pkgs;};
-    });
-
-    formatter = forAllSystems (pkgs: pkgs.alejandra);
-
-    packages = forAllSystems (pkgs: let
-      p = self.overlays.default pkgs pkgs;
-    in {
-      inherit (p.vimPlugins) getchvim;
-      default = p.vimPlugins.getchvim;
-    });
-
-    overlays.default = final: prev: {
-      vimPlugins = prev.vimPlugins.extend (_: _: {
-        getchvim = prev.callPackage ./default.nix {
-          inherit (final.vimUtils) buildVimPluginFrom2Nix;
-          inherit self version;
-        };
-      });
+    parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
     };
+
+    neovim = {
+      url = "github:neovim/neovim?dir=contrib";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "utils";
+    };
+
+    neovim-nix = {
+      url = "github:willruggiano/neovim.nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "parts";
+        pre-commit-nix.follows = "pre-commit";
+        neovim.follows = "neovim";
+      };
+    };
+
+    pre-commit = {
+      url = "github:cachix/pre-commit-hooks.nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        nixpkgs-stable.follows = "nixpkgs";
+        flake-utils.follows = "utils";
+      };
+    };
+
+    # this is to prevent multiple versions in lockfile
+    utils.url = "github:numtide/flake-utils";
   };
+
+  outputs = {parts, ...} @ inputs:
+    parts.lib.mkFlake {inherit inputs;} {
+      imports = [
+        inputs.pre-commit.flakeModule
+        inputs.neovim-nix.flakeModule
+        ./neovim.nix
+      ];
+
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
+      ];
+
+      perSystem = {
+        pkgs,
+        config,
+        self',
+        ...
+      }: {
+        packages = {
+          getchvim = config.neovim.final;
+          default = self'.packages.getchvim;
+        };
+
+        devShells.default = pkgs.mkShell {
+          shellHook = config.pre-commit.installationScript;
+
+          packages = with pkgs; [
+            actionlint
+            self'.formatter
+            deadnix
+            nil
+            statix
+            stylua
+          ];
+        };
+
+        formatter = pkgs.alejandra;
+
+        pre-commit.settings.hooks = {
+          actionlint.enable = true;
+          alejandra.enable = true;
+          deadnix.enable = true;
+          nil.enable = true;
+          statix.enable = true;
+          stylua.enable = true;
+        };
+      };
+    };
 }
