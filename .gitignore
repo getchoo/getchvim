@@ -1,4 +1,7 @@
-.direnv
+# nix build results
 result*
 repl-result-out*
-.luarc.json
+
+# dev shell artifacts
+.direnv
+.pre-commit-config.yaml
