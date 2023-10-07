@@ -10,12 +10,13 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [macos-latest]
         include:
           - os: ubuntu-latest
-            arch:
-              - "aarch64"
-              - "x86_64"
+            arch: "x86_64"
+
+          - os: ubuntu-latest
+            arch: "aarch64"
 
     runs-on: ${{ matrix.os }}
     continue-on-error: true
@@ -41,7 +42,12 @@ jobs:
         uses: DeterminateSystems/magic-nix-cache-action@v2
 
       - name: run build
+        if: matrix.arch != 'aarch64'
         run: nix build --accept-flake-config -Lv
+
+      - name: run build (aarch64)
+        if: matrix.arch == 'aarch64'
+        run: nix build --accept-flake-config -Lv .#packages.aarch64-linux.default
 
   check:
     runs-on: ubuntu-latest
