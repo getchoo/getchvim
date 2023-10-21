@@ -26,7 +26,9 @@ jobs:
 
       - name: setup qemu
         if: matrix.arch == 'aarch64'
-        run: sudo apt install -y qemu-user-static
+        run: |
+          sudo apt update -y
+          sudo apt install -y qemu-user-static
 
       - name: install nix
         if: matrix.arch != 'aarch64'
