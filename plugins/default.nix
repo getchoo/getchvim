@@ -34,13 +34,18 @@ in rec {
     event = ["BufReadPre" "BufNewFile"];
   };
 
-  indent-blankline-nvim = {
+  ibl = {
     package = vimPlugins.indent-blankline-nvim;
 
     event = ["BufReadPost" "BufNewFile"];
 
     config = {
-      filetype_exclude = [
+      indent = {
+        char = "│";
+        tab_char = "│";
+      };
+
+      exclude.filetypes = [
         "help"
         "neo-tree"
         "Trouble"
@@ -49,8 +54,8 @@ in rec {
         "notify"
         "toggleterm"
       ];
-      show_trailing_blankline_indent = false;
-      show_current_context = false;
+
+      scope.enabled = false;
     };
   };
 
