@@ -9,7 +9,7 @@
 
       packages = with pkgs; [
         actionlint
-        self'.formatter
+        alejandra
         deadnix
         nil
         statix
