@@ -3,7 +3,6 @@
     lib,
     pkgs,
     self',
-    inputs',
     ...
   }: let
     plugins = with pkgs.vimPlugins; [
