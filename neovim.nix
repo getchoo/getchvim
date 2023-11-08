@@ -59,7 +59,7 @@
         _: nvim-treesitter.allGrammars ++ [self'.packages.tree-sitter-just]
       ))
       nvim-ts-context-commentstring
-      inputs'.getchoo.packages.vim-just
+      vim-just
 
       # main config
       self'.packages.getchvim

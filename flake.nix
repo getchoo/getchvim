@@ -9,11 +9,6 @@
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
 
-    getchoo = {
-      url = "github:getchoo/nix-exprs";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     pre-commit = {
       url = "github:cachix/pre-commit-hooks.nix";
       inputs = {
