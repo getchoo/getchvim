@@ -45,11 +45,7 @@ jobs:
 
       - name: run build
         if: matrix.arch != 'aarch64'
-        run: nix build --accept-flake-config -Lv
-
-      - name: run build (aarch64)
-        if: matrix.arch == 'aarch64'
-        run: nix build --accept-flake-config -Lv .#packages.aarch64-linux.default
+        run: nix build -Lv .#packages.${{ matrix.arch }}-linux.default
 
   check:
     runs-on: ubuntu-latest
@@ -64,4 +60,4 @@ jobs:
         uses: DeterminateSystems/magic-nix-cache-action@v2
 
       - name: run check
-        run: nix flake check --accept-flake-config -Lv --show-trace
+        run: nix flake check --show-trace
