@@ -1,4 +1,4 @@
-name: ci
+name: CI
 
 on:
   push:
@@ -24,27 +24,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: setup qemu
+      - name: Setup QEMU
         if: matrix.arch == 'aarch64'
-        run: |
-          sudo apt update -y
-          sudo apt install -y qemu-user-static
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
 
-      - name: install nix
+      - name: Install Nix
         if: matrix.arch != 'aarch64'
         uses: DeterminateSystems/nix-installer-action@v7
 
-      - name: install nix (with aarch64)
+      - name: Install Nix (with aarch64)
         if: matrix.arch == 'aarch64'
         uses: DeterminateSystems/nix-installer-action@v7
         with:
           extra-conf: "extra-platforms = aarch64-linux arm-linux"
 
-      - name: setup cache
+      - name: Setup cache
         uses: DeterminateSystems/magic-nix-cache-action@v2
 
-      - name: run build
+      - name: Run build
         if: matrix.arch != 'aarch64'
+        run: nix build -L
+
+      - name: Run ARM build
+        if: matrix.arch == 'aarch64'
         run: nix build -Lv .#packages.${{ matrix.arch }}-linux.default
 
   check:
@@ -53,11 +57,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: install nix
+      - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v7
 
-      - name: setup cache
+      - name: Setup cache
         uses: DeterminateSystems/magic-nix-cache-action@v2
 
-      - name: run check
+      - name: Run check
         run: nix flake check --show-trace
