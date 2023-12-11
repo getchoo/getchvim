@@ -32,11 +32,11 @@ jobs:
 
       - name: Install Nix
         if: matrix.arch != 'aarch64'
-        uses: DeterminateSystems/nix-installer-action@v8
+        uses: DeterminateSystems/nix-installer-action@v9
 
       - name: Install Nix (with aarch64)
         if: matrix.arch == 'aarch64'
-        uses: DeterminateSystems/nix-installer-action@v8
+        uses: DeterminateSystems/nix-installer-action@v9
         with:
           extra-conf: "extra-platforms = aarch64-linux arm-linux"
 
@@ -58,7 +58,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v8
+        uses: DeterminateSystems/nix-installer-action@v9
 
       - name: Setup cache
         uses: DeterminateSystems/magic-nix-cache-action@v2
