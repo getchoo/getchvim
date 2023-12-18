@@ -7,7 +7,16 @@
     efmls-configs = {
       enable = true;
 
-      externallyManagedPackages = ["prettier_eslint"];
+      externallyManagedPackages = [
+        "eslintd"
+        "isort"
+        "mypy"
+        "prettierd"
+        "prettier_eslint"
+        "pylint"
+        "ruff"
+        "rustfmt"
+      ];
 
       setup = {
         all = {
