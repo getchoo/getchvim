@@ -1,0 +1,24 @@
+name: Flakehub publish
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v9
+
+      - name: Push to Flakehub
+        uses: DeterminateSystems/flakehub-push@v3
+        with:
+          visibility: "public"
+          rolling: true
