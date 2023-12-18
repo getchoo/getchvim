@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: ["main"]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -10,14 +10,17 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [macos-latest]
         include:
-          - os: ubuntu-latest
-            arch: "x86_64"
+          - os: macos-latest
+            arch: x86_64
 
           - os: ubuntu-latest
-            arch: "aarch64"
+            arch: x86_64
 
+          - os: ubuntu-latest
+            arch: aarch64
+
+    name: Build (${{ matrix.os }}/${{ matrix.arch }})
     runs-on: ${{ matrix.os }}
     continue-on-error: true
 
@@ -47,11 +50,12 @@ jobs:
         if: matrix.arch != 'aarch64'
         run: nix build -L
 
-      - name: Run ARM build
+      - name: Run build
         if: matrix.arch == 'aarch64'
-        run: nix build -Lv .#packages.${{ matrix.arch }}-linux.default
+        run: nix build -L .#packages.${{ matrix.arch }}-linux.default
 
   check:
+    name: Check flake
     runs-on: ubuntu-latest
 
     steps:
@@ -64,4 +68,4 @@ jobs:
         uses: DeterminateSystems/magic-nix-cache-action@v2
 
       - name: Run check
-        run: nix flake check --show-trace
+        run: nix flake check -L --show-trace
