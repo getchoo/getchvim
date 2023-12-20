@@ -21,10 +21,11 @@
       snippet.expand = "luasnip";
 
       sources = map (name: {inherit name;}) [
-        "nvim_lsp"
-        "luasnip"
-        "path"
         "buffer"
+        "luasnip"
+        "nvim_lsp"
+        "path"
+        "rg"
       ];
     };
   };
