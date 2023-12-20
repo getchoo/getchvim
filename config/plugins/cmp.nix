@@ -23,7 +23,7 @@
       sources = map (name: {inherit name;}) [
         "nvim_lsp"
         "luasnip"
-        "async_path"
+        "path"
         "buffer"
       ];
     };
