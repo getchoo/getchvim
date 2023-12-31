@@ -9,50 +9,25 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
-        include:
-          - os: macos-latest
-            arch: x86_64
+        os: [macos-latest, ubuntu-latest]
 
-          - os: ubuntu-latest
-            arch: x86_64
-
-          - os: ubuntu-latest
-            arch: aarch64
-
-    name: Build (${{ matrix.os }}/${{ matrix.arch }})
+    name: Build (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
-    continue-on-error: true
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup QEMU
-        if: matrix.arch == 'aarch64'
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: arm64
-
       - name: Install Nix
-        if: matrix.arch != 'aarch64'
         uses: DeterminateSystems/nix-installer-action@v9
-
-      - name: Install Nix (with aarch64)
-        if: matrix.arch == 'aarch64'
-        uses: DeterminateSystems/nix-installer-action@v9
-        with:
-          extra-conf: "extra-platforms = aarch64-linux arm-linux"
 
       - name: Setup cache
         uses: DeterminateSystems/magic-nix-cache-action@v2
 
       - name: Run build
-        if: matrix.arch != 'aarch64'
-        run: nix build -L
-
-      - name: Run build
-        if: matrix.arch == 'aarch64'
-        run: nix build -L .#packages.${{ matrix.arch }}-linux.default
+        run: |
+          nix build --print-build-logs
 
   check:
     name: Check flake
@@ -64,8 +39,6 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v9
 
-      - name: Setup cache
-        uses: DeterminateSystems/magic-nix-cache-action@v2
-
       - name: Run check
-        run: nix flake check -L --show-trace
+        run: |
+          nix flake check --print-build-logs --show-trace
