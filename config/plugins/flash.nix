@@ -1,5 +1,0 @@
-{
-  plugins.flash = {
-    enable = true;
-  };
-}

@@ -14,50 +14,10 @@
         "url": "https://flakehub.com/f/NixOS/nixpkgs/0.1.0.tar.gz"
       }
     },
-    "nixvim": {
-      "inputs": {
-        "flake-utils": [
-          "utils"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "pre-commit-hooks": []
-      },
-      "locked": {
-        "lastModified": 1703859882,
-        "narHash": "sha256-wRXgap0eEuswF9xXUKDiWBh0tKuJ9vtmlJZ4iAX3K/E=",
-        "rev": "1d8e7906c9606c956c6b40d8d088c8d2110dc0c0",
-        "revCount": 865,
-        "type": "tarball",
-        "url": "https://api.flakehub.com/f/pinned/nix-community/nixvim/0.1.865%2Brev-1d8e7906c9606c956c6b40d8d088c8d2110dc0c0/018cb5f7-3a9f-7ad1-99f0-3e1da8634bb8/source.tar.gz"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://flakehub.com/f/nix-community/nixvim/0.1.%2A.tar.gz"
-      }
-    },
     "root": {
       "inputs": {
         "nixpkgs": "nixpkgs",
-        "nixvim": "nixvim",
-        "tree-sitter-just": "tree-sitter-just",
-        "utils": "utils"
-      }
-    },
-    "systems": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
+        "tree-sitter-just": "tree-sitter-just"
       }
     },
     "tree-sitter-just": {
@@ -74,23 +34,6 @@
         "owner": "IndianBoy42",
         "repo": "tree-sitter-just",
         "type": "github"
-      }
-    },
-    "utils": {
-      "inputs": {
-        "systems": "systems"
-      },
-      "locked": {
-        "lastModified": 1701680307,
-        "narHash": "sha256-kAuep2h5ajznlPMD9rnQyffWG8EM/C73lejGofXvdM8=",
-        "rev": "4022d587cbbfd70fe950c1e2083a02621806a725",
-        "revCount": 88,
-        "type": "tarball",
-        "url": "https://api.flakehub.com/f/pinned/numtide/flake-utils/0.1.88%2Brev-4022d587cbbfd70fe950c1e2083a02621806a725/018c340d-3287-7c66-818b-f2f646a808e3/source.tar.gz"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://flakehub.com/f/numtide/flake-utils/0.1.88.tar.gz"
       }
     }
   },
