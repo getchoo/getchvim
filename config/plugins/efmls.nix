@@ -1,22 +1,14 @@
 {
   plugins = {
     lsp.servers.efm.extraOptions = {
-      init_options.documentFormatting = true;
+      init_options = {
+        documentFormatting = true;
+        documentRangeFormatting = true;
+      };
     };
 
     efmls-configs = {
       enable = true;
-
-      externallyManagedPackages = [
-        "eslintd"
-        "isort"
-        "mypy"
-        "prettierd"
-        "prettier_eslint"
-        "pylint"
-        "ruff"
-        "rustfmt"
-      ];
 
       setup = {
         all = {
@@ -32,7 +24,7 @@
         };
 
         css = {
-          formatter = "prettier_d";
+          formatter = "prettier";
         };
 
         fish = {
@@ -40,16 +32,11 @@
         };
 
         html = {
-          formatter = "prettier_d";
-        };
-
-        javascript = {
-          formatter = "prettier_eslint";
-          linter = "eslint_d";
+          formatter = "prettier";
         };
 
         json = {
-          formatter = "prettier_d";
+          formatter = "prettier";
         };
 
         lua = {
@@ -57,42 +44,20 @@
         };
 
         nix = {
-          formatter = "alejandra";
           linter = "statix";
         };
 
-        python = {
-          formatter = [
-            "ruff"
-            "isort"
-          ];
-
-          linter = [
-            "mypy"
-            "pylint"
-          ];
-        };
-
-        rust = {
-          formatter = "rustfmt";
-        };
-
         sass = {
-          formatter = "prettier_d";
+          formatter = "prettier";
         };
 
         scss = {
-          formatter = "prettier_d";
+          formatter = "prettier";
         };
 
         sh = {
           formatter = ["beautysh" "shellharden"];
           linter = "shellcheck";
-        };
-
-        typescript = {
-          formatter = "prettier_eslint";
-          linter = "eslint_d";
         };
 
         yaml = {

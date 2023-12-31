@@ -1,13 +1,15 @@
-{lib, ...}: {
+{
   plugins.lsp = {
     enable = true;
 
+    # nil-ls wants dynamicRegistration
     capabilities = ''
       capabilities = vim.tbl_deep_extend(
-        "force",
-        require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities()),
-        { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
-      )
+       	"force",
+       	vim.lsp.protocol.make_client_capabilities(),
+       	require("cmp_nvim_lsp").default_capabilities(),
+       	{ workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
+       )
     '';
 
     keymaps = {
@@ -17,38 +19,54 @@
         "]d" = "goto_next";
         "<leader>u" = "setloclist";
       };
+
+      lspBuf = {
+        "<leader>ca" = "code_action";
+      };
     };
 
     servers = let
-      withDefaultOpts = lib.genAttrs [
-        "bashls"
-        "lua-ls"
-        "nil_ls"
-      ] (_: {enable = true;});
+      enable = {enable = true;};
 
-      optionalOpts = {
-        enable = true;
-        installLanguageServer = false;
-        autostart = false;
-      };
+      optional =
+        enable
+        // {
+          installLanguageServer = false;
+          autostart = false;
+        };
+    in {
+      bashls = enable;
+      clangd = optional;
+      denols = optional;
+      eslint = optional;
 
-      optional = lib.genAttrs [
-        "clangd"
-        "eslint"
-        "pyright"
-        "rust-analyzer"
-        "tsserver"
-      ] (_: optionalOpts);
-    in
-      withDefaultOpts
-      // optional
-      // {
-        rust-analyzer =
-          optionalOpts
-          // {
-            installRustc = false;
-            installCargo = false;
-          };
-      };
+      lua-ls = enable;
+
+      nil_ls =
+        enable
+        // {
+          settings.formatting.command = ["alejandra"];
+        };
+
+      pyright = optional;
+      ruff-lsp =
+        optional
+        // {
+          # let pyright handle it
+          onAttach.function = ''
+            client.server_capabilities.hoverProvider = false
+          '';
+        };
+
+      rust-analyzer =
+        optional
+        // {
+          installRustc = false;
+          installCargo = false;
+          settings.check.command = "clippy";
+        };
+
+      tsserver = optional;
+    };
   };
 }
