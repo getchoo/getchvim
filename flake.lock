@@ -23,16 +23,17 @@
     "tree-sitter-just": {
       "flake": false,
       "locked": {
-        "lastModified": 1704966794,
-        "narHash": "sha256-iK+MpyK5pQ/sYT2CHYmeI0k231HwHdZ80ij1cqlO5Nk=",
+        "lastModified": 1704453670,
+        "narHash": "sha256-mQbq0fQIyj8XhYvsLUfGlhRIuMUfpb/KuSd6MRmZS8c=",
         "owner": "IndianBoy42",
         "repo": "tree-sitter-just",
-        "rev": "f807ab33c36651ecb503a291aed933932754864d",
+        "rev": "27b2d8a07e409025cd4160e56c1c1af939a2c556",
         "type": "github"
       },
       "original": {
         "owner": "IndianBoy42",
         "repo": "tree-sitter-just",
+        "rev": "27b2d8a07e409025cd4160e56c1c1af939a2c556",
         "type": "github"
       }
     }

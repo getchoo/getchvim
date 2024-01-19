@@ -5,7 +5,7 @@
     nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.0.tar.gz";
 
     tree-sitter-just = {
-      url = "github:IndianBoy42/tree-sitter-just";
+      url = "github:IndianBoy42/tree-sitter-just/27b2d8a07e409025cd4160e56c1c1af939a2c556";
       flake = false;
     };
   };
