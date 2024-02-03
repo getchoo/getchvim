@@ -7,6 +7,7 @@ require("mini.comment").setup({
 	},
 })
 
+require("mini.files").setup()
 require("mini.pairs").setup()
 require("mini.indentscope").setup({
 	options = { try_as_border = true },

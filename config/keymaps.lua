@@ -3,20 +3,16 @@ local set = function(mode, key, vimcmd)
 	vim.keymap.set(mode, key, vimcmd, opts)
 end
 
-if pcall(require, "neo-tree.command") then
-	set("n", "<leader>t", function()
-		require("neo-tree.command").execute({
-			toggle = true,
-			dir = vim.loop.cwd(),
-		})
-	end)
-end
+set("n", "<leader>t", function()
+	local files = require("mini.files")
+	if not files.close() then
+		files.open()
+	end
+end)
 
-if pcall(require, "flash") then
-	set({ "n", "o", "x" }, "s", function()
-		require("flash").jump()
-	end)
-end
+set({ "n", "o", "x" }, "s", function()
+	require("flash").jump()
+end)
 
 for i = 1, 9 do
 	set("n", "<leader>" .. i, function()
