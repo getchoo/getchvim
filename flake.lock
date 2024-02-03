@@ -16,25 +16,7 @@
     },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs",
-        "tree-sitter-just": "tree-sitter-just"
-      }
-    },
-    "tree-sitter-just": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1704453670,
-        "narHash": "sha256-mQbq0fQIyj8XhYvsLUfGlhRIuMUfpb/KuSd6MRmZS8c=",
-        "owner": "IndianBoy42",
-        "repo": "tree-sitter-just",
-        "rev": "27b2d8a07e409025cd4160e56c1c1af939a2c556",
-        "type": "github"
-      },
-      "original": {
-        "owner": "IndianBoy42",
-        "repo": "tree-sitter-just",
-        "rev": "27b2d8a07e409025cd4160e56c1c1af939a2c556",
-        "type": "github"
+        "nixpkgs": "nixpkgs"
       }
     }
   },

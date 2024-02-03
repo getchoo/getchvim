@@ -1,20 +1,12 @@
 {
   description = "getchoo's neovim config";
 
-  inputs = {
-    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.0.tar.gz";
-
-    tree-sitter-just = {
-      url = "github:IndianBoy42/tree-sitter-just/27b2d8a07e409025cd4160e56c1c1af939a2c556";
-      flake = false;
-    };
-  };
+  inputs.nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.0.tar.gz";
 
   outputs = {
     self,
     nixpkgs,
-    ...
-  } @ inputs: let
+  }: let
     systems = [
       "x86_64-linux"
       "aarch64-linux"
@@ -49,14 +41,6 @@
 
     packages = forAllSystems (pkgs: rec {
       getchvim = import ./neovim.nix self pkgs;
-
-      tree-sitter-just = pkgs.tree-sitter.buildGrammar {
-        language = "just";
-        version = builtins.substring 0 8 inputs.tree-sitter-just.lastModifiedDate;
-
-        src = inputs.tree-sitter-just;
-      };
-
       default = getchvim;
     });
   };

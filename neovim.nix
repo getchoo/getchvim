@@ -5,7 +5,7 @@ self: {
 }: let
   config = pkgs.vimUtils.buildVimPlugin {
     pname = "neovim-config";
-    version = builtins.substring 0 8 self.lastModifiedDate or "dirty";
+    version = builtins.substring 0 8 self.rev or self.dirtyRev or "dirty";
 
     src = null;
 
@@ -47,16 +47,12 @@ self: {
     lualine-nvim
 
     mini-nvim
-    neo-tree-nvim
 
     telescope-nvim
     # dependent on >
     plenary-nvim
 
-    (
-      nvim-treesitter.withPlugins (_:
-        nvim-treesitter.allGrammars ++ [self.packages.${pkgs.system}.tree-sitter-just])
-    )
+    nvim-treesitter.withAllGrammars
     nvim-ts-context-commentstring
     nvim-ts-autotag
     vim-just
