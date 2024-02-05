@@ -23,7 +23,7 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@v9
 
       - name: Setup cache
-        uses: DeterminateSystems/magic-nix-cache-action@v2
+        uses: DeterminateSystems/magic-nix-cache-action@v3
 
       - name: Run build
         run: |
