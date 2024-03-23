@@ -10,9 +10,9 @@ opt.termguicolors = true
 local backupDir = vim.fn.stdpath("state") .. "/backup"
 local b = io.open(backupDir, "r")
 if b then
-  b:close()
-else 
-  os.execute("mkdir -p " .. backupDir)
+	b:close()
+else
+	os.execute("mkdir -p " .. backupDir)
 end
 
 opt.backupdir = backupDir
