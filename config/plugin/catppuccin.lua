@@ -1,3 +1,8 @@
+if vim.g.did_load_catppuccin_plugin then
+	return
+end
+vim.g.did_load_catppuccin_plugin = true
+
 local compile_path = vim.fn.stdpath("cache") .. "/catppuccin-nvim"
 vim.fn.mkdir(compile_path, "p")
 vim.opt.runtimepath:append(compile_path)

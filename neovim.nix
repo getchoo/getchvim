@@ -5,16 +5,12 @@ self: {
 }: let
   config = pkgs.vimUtils.buildVimPlugin {
     pname = "neovim-config";
-    version = builtins.substring 0 8 self.rev or self.dirtyRev or "dirty";
+    version = self.shortRev or self.dirtyShortRev or "unknown-dirty";
 
-    src = null;
-
-    dontUnpack = true;
-
-    buildPhase = ''
-      mkdir -p lua
-      cp -r ${./config} lua/getchoo
-    '';
+    src = lib.fileset.toSource {
+      root = ./config;
+      fileset = lib.fileset.gitTracked ./config;
+    };
   };
 
   plugins = with pkgs.vimPlugins; [
@@ -53,9 +49,9 @@ self: {
     plenary-nvim
 
     nvim-treesitter.withAllGrammars
+    nvim-treesitter-context
     nvim-ts-context-commentstring
     nvim-ts-autotag
-    vim-just
 
     trouble-nvim
     which-key-nvim

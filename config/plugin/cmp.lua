@@ -1,3 +1,8 @@
+if vim.g.did_load_cmp_plugin then
+	return
+end
+vim.g.did_load_cmp_plugin = true
+
 local cmp = require("cmp")
 
 cmp.setup({

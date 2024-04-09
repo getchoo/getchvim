@@ -1,3 +1,8 @@
+if vim.g.did_load_lsp_plugin then
+	return
+end
+vim.g.did_load_lsp_plugin = true
+
 local lsp_servers = {
 	bashls = {
 		binary = "bash-language-server",
@@ -8,8 +13,8 @@ local lsp_servers = {
 	eslint = {},
 
 	efm = {
-		binary = "true",
-		extraOptions = require("getchoo.plugins.efmls"),
+		binary = "efm-langserver",
+		extraOptions = require("getchoo.efmls"),
 	},
 
 	lua_ls = {

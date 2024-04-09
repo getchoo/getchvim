@@ -20,12 +20,13 @@
     checks = forAllSystems (pkgs: import ./checks.nix {inherit pkgs self;});
 
     devShells = forAllSystems (pkgs: {
-      default = pkgs.mkShell {
+      default = pkgs.mkShellNoCC {
         packages = with pkgs; [
           actionlint
 
           # lua
           lua-language-server
+					selene
           stylua
 
           # nix

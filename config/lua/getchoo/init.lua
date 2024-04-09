@@ -2,7 +2,9 @@ local opt = vim.opt
 
 opt.shiftwidth = 2
 opt.tabstop = 2
-opt.smartindent = true
+-- https://www.reddit.com/r/neovim/comments/14n6iiy/if_you_have_treesitter_make_sure_to_disable
+-- TLDR: this breaks things with treesitter indent
+opt.smartindent = false
 opt.wrap = true
 opt.syntax = "on"
 opt.termguicolors = true
@@ -16,3 +18,6 @@ else
 end
 
 opt.backupdir = backupDir
+
+vim.g.mapleader = ","
+vim.g.do_filetype_lua = 1
