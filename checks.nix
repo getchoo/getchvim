@@ -15,8 +15,8 @@ in {
     touch $out
   '';
 
-  check-selen = pkgs.runCommand "check-selene" {} ''
-    ${lib.getExe pkgs.selene} ${./config}
+  check-selene = pkgs.runCommand "check-selene" {} ''
+    ${lib.getExe pkgs.selene} ${./.}
   '';
 
   check-statix = pkgs.runCommand "check-statix" {} ''
