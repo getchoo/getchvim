@@ -6,6 +6,7 @@ local fish_indent = require("efmls-configs.formatters.fish_indent")
 local prettier = require("efmls-configs.formatters.prettier")
 local prettier_eslint = require("efmls-configs.formatters.prettier_eslint")
 local selene = require("efmls-configs.linters.selene")
+local statix = require("efmls-configs.linters.statix")
 local stylua = require("efmls-configs.formatters.stylua")
 
 local languages = {
@@ -26,6 +27,8 @@ local languages = {
 	json = { prettier },
 
 	lua = { selene, stylua },
+
+	nix = { statix },
 
 	sass = { prettier },
 

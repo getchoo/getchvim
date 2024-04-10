@@ -66,12 +66,12 @@ self: {
     nodePackages.alex
     actionlint
     beautysh
+    statix
 
     # lspconfig
     nodePackages.bash-language-server
     nil
     alejandra
-    statix
     typos-lsp
   ];
 

@@ -89,8 +89,6 @@ local lsp_servers = {
 		},
 	},
 
-	statix = {},
-
 	tsserver = {
 		binary = "typescript-language-server",
 	},
