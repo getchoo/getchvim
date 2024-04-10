@@ -4,13 +4,27 @@ end
 vim.g.did_load_lsp_plugin = true
 
 local lsp_servers = {
+	astro = {
+		binary = "astro-ls",
+	},
+
 	bashls = {
 		binary = "bash-language-server",
 	},
 
+	biome = {},
+
 	clangd = {},
 
-	eslint = {},
+	denols = {
+		binary = "deno",
+	},
+
+	dprint = {},
+
+	eslint = {
+		binary = "vscode-eslint-language-server",
+	},
 
 	efm = {
 		binary = "efm-langserver",
@@ -41,7 +55,20 @@ local lsp_servers = {
 		},
 	},
 
-	pyright = {},
+	nim_langserver = {
+		binary = "nimlangserver",
+	},
+
+	pyright = {
+		extraOptions = {
+			settings = {
+				-- ruff is used instead
+				pyright = { disableOrganizeImports = true },
+				python = { ignore = { "*" } },
+			},
+		},
+	},
+
 	ruff_lsp = {
 		binary = "ruff-lsp",
 		extraOptions = {
@@ -62,12 +89,18 @@ local lsp_servers = {
 		},
 	},
 
-	denols = {
-		binary = "deno",
-	},
+	statix = {},
 
 	tsserver = {
 		binary = "typescript-language-server",
+	},
+
+	typos_lsp = {
+		binary = "typos-lsp",
+	},
+
+	typst_lsp = {
+		binary = "typst-lsp",
 	},
 }
 

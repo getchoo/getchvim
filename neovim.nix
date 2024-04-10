@@ -66,14 +66,13 @@ self: {
     nodePackages.alex
     actionlint
     beautysh
-    codespell
-    shellcheck
-    statix
 
     # lspconfig
     nodePackages.bash-language-server
     nil
     alejandra
+    statix
+    typos-lsp
   ];
 
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig {

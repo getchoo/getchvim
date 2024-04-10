@@ -2,17 +2,14 @@ local alex = require("efmls-configs.linters.alex")
 alex.rootMarkers = nil
 local actionlint = require("efmls-configs.linters.actionlint")
 local beautysh = require("efmls-configs.formatters.beautysh")
-local codespell = require("efmls-configs.linters.codespell")
 local fish_indent = require("efmls-configs.formatters.fish_indent")
 local prettier = require("efmls-configs.formatters.prettier")
 local prettier_eslint = require("efmls-configs.formatters.prettier_eslint")
 local selene = require("efmls-configs.linters.selene")
-local shellcheck = require("efmls-configs.linters.shellcheck")
-local statix = require("efmls-configs.linters.statix")
 local stylua = require("efmls-configs.formatters.stylua")
 
 local languages = {
-	all = { alex, codespell },
+	all = { alex },
 
 	bash = {
 		beautysh,
@@ -30,13 +27,11 @@ local languages = {
 
 	lua = { selene, stylua },
 
-	nix = { statix },
-
 	sass = { prettier },
 
 	scss = { prettier },
 
-	sh = { beautysh, shellcheck },
+	sh = { beautysh },
 
 	typescript = { prettier_eslint },
 

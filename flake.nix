@@ -26,7 +26,7 @@
 
           # lua
           lua-language-server
-					selene
+          selene
           stylua
 
           # nix
