@@ -70,6 +70,7 @@ self: {
 
     # lspconfig
     nodePackages.bash-language-server
+    shellcheck
     nil
     alejandra
     typos-lsp
