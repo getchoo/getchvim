@@ -16,7 +16,9 @@ in {
   '';
 
   check-selene = pkgs.runCommand "check-selene" {} ''
-    ${lib.getExe pkgs.selene} ${./.}
+    cd ${./.}
+    ${lib.getExe pkgs.selene} .
+    touch $out
   '';
 
   check-statix = pkgs.runCommand "check-statix" {} ''
@@ -26,7 +28,6 @@ in {
 
   check-stylua = pkgs.runCommand "check-stylua" {} ''
     ${lib.getExe pkgs.stylua} --check ${./.}
-
     touch $out
   '';
 }
