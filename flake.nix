@@ -1,11 +1,15 @@
 {
   description = "getchoo's neovim config";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    flake-checks.url = "github:getchoo/flake-checks";
+  };
 
   outputs = {
     self,
     nixpkgs,
+    flake-checks,
   }: let
     systems = [
       "x86_64-linux"
@@ -14,10 +18,23 @@
       "aarch64-darwin"
     ];
 
-    forSystem = system: fn: fn nixpkgs.legacyPackages.${system};
-    forAllSystems = fn: nixpkgs.lib.genAttrs systems (system: forSystem system fn);
+    forAllSystems = fn: nixpkgs.lib.genAttrs systems (system: fn nixpkgs.legacyPackages.${system});
   in {
-    checks = forAllSystems (pkgs: import ./checks.nix {inherit pkgs self;});
+    checks = forAllSystems (pkgs: let
+      flake-checks' = flake-checks.lib.mkChecks {
+        root = ./.;
+        inherit pkgs;
+      };
+    in {
+      inherit
+        (flake-checks')
+        actionlint
+        alejandra
+        selene
+        statix
+        stylua
+        ;
+    });
 
     devShells = forAllSystems (pkgs: {
       default = pkgs.mkShellNoCC {
