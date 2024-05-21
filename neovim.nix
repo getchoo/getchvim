@@ -77,19 +77,18 @@ self: {
   ];
 
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
-    withPython3 = true;
-    withRuby = false;
     plugins = plugins ++ [config];
-    customRC = ''
-      lua require("getchoo")
-    '';
   };
 in
-  pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped (lib.recursiveUpdate
+  pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped (
     neovimConfig
-    {
+    // {
+      luaRcContent = ''
+        require("getchoo")
+      '';
+
       wrapperArgs =
-        lib.escapeShellArgs neovimConfig.wrapperArgs
-        + " "
-        + ''--suffix PATH : "${lib.makeBinPath extraPackages}"'';
-    })
+        neovimConfig.wrapperArgs
+        ++ ["--suffix" "PATH" ":" "${lib.makeBinPath extraPackages}"];
+    }
+  )
