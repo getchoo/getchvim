@@ -1,11 +1,13 @@
-name: Flakehub publish
+name: Publish flake
 
 on:
   push:
     branches: [main]
 
 jobs:
-  publish:
+  flakehub:
+    name: FlakeHub
+
     runs-on: ubuntu-latest
 
     permissions:
@@ -22,3 +24,14 @@ jobs:
         with:
           visibility: "public"
           rolling: true
+
+  flakestry:
+    name: Flakestry
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+
+    steps:
+      - uses: flakestry/flakestry-publish@main
