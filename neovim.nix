@@ -1,19 +1,23 @@
-self: {
+{
   lib,
-  pkgs,
+  neovimUtils,
+  vimPlugins,
+  wrapNeovimUnstable,
+  neovim-unwrapped,
+  actionlint,
+  alejandra,
+  beautysh,
+  ripgrep,
+  efm-langserver,
+  nil,
+  nodePackages,
+  shellcheck,
+  statix,
+  typos-lsp,
+  vimPlugins-getchoo-nvim,
   ...
 }: let
-  config = pkgs.vimUtils.buildVimPlugin {
-    pname = "neovim-config";
-    version = self.shortRev or self.dirtyShortRev or "unknown-dirty";
-
-    src = lib.fileset.toSource {
-      root = ./config;
-      fileset = lib.fileset.gitTracked ./config;
-    };
-  };
-
-  plugins = with pkgs.vimPlugins; [
+  plugins = with vimPlugins; [
     bufferline-nvim
     # dependent on >
     nvim-web-devicons
@@ -57,7 +61,7 @@ self: {
     which-key-nvim
   ];
 
-  extraPackages = with pkgs; [
+  extraPackages = [
     # cmp
     ripgrep
 
@@ -76,11 +80,11 @@ self: {
     typos-lsp
   ];
 
-  neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
-    plugins = plugins ++ [config];
+  neovimConfig = neovimUtils.makeNeovimConfig {
+    plugins = plugins ++ [vimPlugins-getchoo-nvim];
   };
 in
-  pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped (
+  wrapNeovimUnstable neovim-unwrapped (
     neovimConfig
     // {
       luaRcContent = ''

@@ -18,9 +18,14 @@
       "aarch64-darwin"
     ];
 
-    forAllSystems = fn: nixpkgs.lib.genAttrs systems (system: fn nixpkgs.legacyPackages.${system});
+    forAllSystems = fn:
+      nixpkgs.lib.genAttrs systems (system:
+        fn {
+          inherit system;
+          pkgs = nixpkgs.legacyPackages.${system};
+        });
   in {
-    checks = forAllSystems (pkgs: let
+    checks = forAllSystems ({pkgs, ...}: let
       flake-checks' = flake-checks.lib.mkChecks {
         root = ./.;
         inherit pkgs;
@@ -36,30 +41,47 @@
         ;
     });
 
-    devShells = forAllSystems (pkgs: {
+    devShells = forAllSystems ({
+      pkgs,
+      system,
+    }: {
       default = pkgs.mkShellNoCC {
-        packages = with pkgs; [
-          actionlint
+        packages = [
+          pkgs.actionlint
 
           # lua
-          lua-language-server
-          selene
-          stylua
+          pkgs.lua-language-server
+          pkgs.selene
+          pkgs.stylua
 
           # nix
-          self.formatter.${pkgs.system}
-          deadnix
-          nil
-          statix
+          self.formatter.${system}
+          pkgs.deadnix
+          pkgs.nil
+          pkgs.statix
         ];
       };
     });
 
-    formatter = forAllSystems (pkgs: pkgs.alejandra);
+    formatter = forAllSystems ({pkgs, ...}: pkgs.alejandra);
 
-    packages = forAllSystems (pkgs: rec {
-      getchvim = import ./neovim.nix self pkgs;
-      default = getchvim;
+    packages = forAllSystems ({
+      pkgs,
+      system,
+    }: let
+      packages' = self.packages.${system};
+      version = self.shortRev or self.dirtyShortRev or "unknown";
+    in {
+      getchvim = pkgs.callPackage ./neovim.nix {
+        inherit version;
+        inherit (packages') vimPlugins-getchoo-nvim;
+      };
+
+      vimPlugins-getchoo-nvim = pkgs.callPackage ./config {
+        inherit version;
+      };
+
+      default = packages'.getchvim;
     });
   };
 }
