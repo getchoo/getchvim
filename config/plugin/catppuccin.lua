@@ -22,7 +22,6 @@ require("catppuccin").setup({
 			enabled = true,
 		},
 		neotree = true,
-		treesitter_context = true,
 		treesitter = true,
 		telescope = true,
 		which_key = true,

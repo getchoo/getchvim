@@ -53,7 +53,6 @@
     plenary-nvim
 
     nvim-treesitter.withAllGrammars
-    nvim-treesitter-context
     nvim-ts-context-commentstring
     nvim-ts-autotag
 
