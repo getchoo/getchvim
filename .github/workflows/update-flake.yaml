@@ -2,29 +2,36 @@ name: Update flake.lock
 
 on:
   schedule:
-    # run every saturday at 0:00 utc
+    # run every saturday
     - cron: "0 0 * * 6"
   workflow_dispatch:
 
 jobs:
   update:
+    name: Run update
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v12
 
-      - name: Update lockfile & make PR
+      - name: Update flake.lock & make PR
         uses: DeterminateSystems/update-flake-lock@v22
         id: update
         with:
+          commit-msg: "nix: update flake.lock"
+          pr-title: "nix: update flake.lock"
           token: ${{ secrets.MERGE_TOKEN }}
 
       - name: Enable auto-merge
-        shell: bash
-        run: gh pr merge --auto --rebase "$PR_ID"
+        if: env.PR_ID != ''
+        run: gh pr merge --auto --squash "$PR_ID"
         env:
-          GITHUB_TOKEN: ${{ secrets.MERGE_TOKEN }}
+          GH_TOKEN: ${{ github.token}}
           PR_ID: ${{ steps.update.outputs.pull-request-number }}
