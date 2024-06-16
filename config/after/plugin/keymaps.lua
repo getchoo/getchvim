@@ -36,7 +36,7 @@ set("n", "<leader>f", function()
 end)
 
 set("n", "<leader>p", function()
-	vim.cmd("TroubleToggle")
+	vim.cmd("Trouble diagnostics toggle")
 end)
 
 set("n", "<leader>z", function()
