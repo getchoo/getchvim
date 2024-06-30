@@ -5,18 +5,19 @@
   wrapNeovimUnstable,
   neovim-unwrapped,
   actionlint,
-  alejandra,
   beautysh,
   ripgrep,
   efm-langserver,
   nil,
+  nixfmt-rfc-style,
   nodePackages,
   shellcheck,
   statix,
   typos-lsp,
   vimPlugins-getchoo-nvim,
   ...
-}: let
+}:
+let
   plugins = with vimPlugins; [
     bufferline-nvim
     # dependent on >
@@ -75,23 +76,24 @@
     nodePackages.bash-language-server
     shellcheck
     nil
-    alejandra
+    nixfmt-rfc-style
     typos-lsp
   ];
 
-  neovimConfig = neovimUtils.makeNeovimConfig {
-    plugins = plugins ++ [vimPlugins-getchoo-nvim];
-  };
+  neovimConfig = neovimUtils.makeNeovimConfig { plugins = plugins ++ [ vimPlugins-getchoo-nvim ]; };
 in
-  wrapNeovimUnstable neovim-unwrapped (
-    neovimConfig
-    // {
-      luaRcContent = ''
-        require("getchoo")
-      '';
+wrapNeovimUnstable neovim-unwrapped (
+  neovimConfig
+  // {
+    luaRcContent = ''
+      require("getchoo")
+    '';
 
-      wrapperArgs =
-        neovimConfig.wrapperArgs
-        ++ ["--suffix" "PATH" ":" "${lib.makeBinPath extraPackages}"];
-    }
-  )
+    wrapperArgs = neovimConfig.wrapperArgs ++ [
+      "--suffix"
+      "PATH"
+      ":"
+      "${lib.makeBinPath extraPackages}"
+    ];
+  }
+)

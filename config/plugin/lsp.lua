@@ -49,7 +49,7 @@ local lsp_servers = {
 		extraOptions = {
 			settings = {
 				["nil"] = {
-					formatting = { command = { "alejandra" } },
+					formatting = { command = { "nixfmt" } },
 				},
 			},
 		},

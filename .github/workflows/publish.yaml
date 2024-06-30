@@ -25,13 +25,14 @@ jobs:
           visibility: "public"
           rolling: true
 
-  flakestry:
-    name: Flakestry
+  # TODO: re-enable when flakestry supports rolling releases
+	# flakestry:
+  #   name: Flakestry
 
-    runs-on: ubuntu-latest
+  #   runs-on: ubuntu-latest
 
-    permissions:
-      id-token: write
+  #   permissions:
+  #     id-token: write
 
-    steps:
-      - uses: flakestry/flakestry-publish@main
+  #   steps:
+  #     - uses: flakestry/flakestry-publish@main
