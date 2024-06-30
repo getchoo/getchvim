@@ -1,17 +1,10 @@
 {
   description = "getchoo's neovim config";
 
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    flake-checks.url = "github:getchoo/flake-checks";
-  };
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
   outputs =
-    {
-      self,
-      nixpkgs,
-      flake-checks,
-    }:
+    { self, nixpkgs }:
     let
       systems = [
         "x86_64-linux"
@@ -20,38 +13,67 @@
         "aarch64-darwin"
       ];
 
-      forAllSystems =
-        fn:
-        nixpkgs.lib.genAttrs systems (
-          system:
-          fn {
-            inherit system;
-            pkgs = nixpkgs.legacyPackages.${system};
-          }
-        );
+      forAllSystems = nixpkgs.lib.genAttrs systems;
+      nixpkgsFor = forAllSystems (system: nixpkgs.legacyPackages.${system});
     in
     {
       checks = forAllSystems (
-        { pkgs, ... }:
+        system:
         let
-          flake-checks' = flake-checks.lib.mkChecks {
-            root = ./.;
-            inherit pkgs;
-          };
+          pkgs = nixpkgsFor.${system};
         in
         {
-          inherit (flake-checks')
-            actionlint
-            alejandra
-            selene
-            statix
-            stylua
-            ;
+          check-formatting =
+            pkgs.runCommand "check-formatting"
+              {
+                nativeBuildInputs = [
+                  pkgs.actionlint
+                  pkgs.nixfmt-rfc-style
+                  pkgs.stylua
+                ];
+              }
+              ''
+                cd ${./.}
+
+                echo "running actionlint..."
+                actionlint ./.github/workflows/*
+
+                echo "running nixfmt..."
+                nixfmt --check .
+
+                echo "running stylua..."
+                stylua --check .
+
+                touch $out
+              '';
+
+          check-lint =
+            pkgs.runCommand "check-lint"
+              {
+                nativeBuildInputs = [
+                  pkgs.selene
+                  pkgs.statix
+                ];
+              }
+              ''
+                cd ${./.}
+
+                echo "running selene..."
+                selene .
+
+                echo "running statix..."
+                statix check .
+
+                touch $out
+              '';
         }
       );
 
       devShells = forAllSystems (
-        { pkgs, system }:
+        system:
+        let
+          pkgs = nixpkgsFor.${system};
+        in
         {
           default = pkgs.mkShellNoCC {
             packages = [
@@ -72,11 +94,13 @@
         }
       );
 
-      formatter = forAllSystems ({ pkgs, ... }: pkgs.nixfmt-rfc-style);
+      formatter = forAllSystems (system: nixpkgsFor.${system}.nixfmt-rfc-style);
 
       packages = forAllSystems (
-        { pkgs, system }:
+        system:
         let
+          pkgs = nixpkgsFor.${system};
+
           packages' = self.packages.${system};
           version = self.shortRev or self.dirtyShortRev or "unknown";
         in
