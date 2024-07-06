@@ -54,8 +54,6 @@ let
     plenary-nvim
 
     nvim-treesitter.withAllGrammars
-    nvim-ts-context-commentstring
-    nvim-ts-autotag
 
     trouble-nvim
     which-key-nvim
