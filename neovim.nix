@@ -37,11 +37,7 @@ let
   plugins = with vimPlugins; [
     vimPlugins-getchoo-nvim
 
-    bufferline-nvim
-    # dependent on >
-    nvim-web-devicons
-    catppuccin-nvim
-
+    # coding
     nvim-cmp
     luasnip
     cmp-async-path
@@ -50,26 +46,30 @@ let
     cmp-nvim-lsp
     cmp-rg
 
-    fidget-nvim
-    flash-nvim
     gitsigns-nvim
-
-    indent-blankline-nvim
-
-    nvim-lspconfig
-    lsp-format-nvim
     nvim-lint
 
-    lualine-nvim
-
+    # editing
+    flash-nvim
     mini-nvim
 
-    telescope-nvim
-    # dependent on >
+    telescope-nvim # dependent on >
     plenary-nvim
 
     nvim-treesitter.withAllGrammars
 
+    # ui
+    bufferline-nvim # dependent on >
+    nvim-web-devicons
+
+    catppuccin-nvim
+    indent-blankline-nvim
+    lualine-nvim
+
+    # lsp
+    fidget-nvim
+    nvim-lspconfig
+    lsp-format-nvim
     trouble-nvim
   ];
 
