@@ -1,10 +1,4 @@
 # nix build results
-result*
+result
+result-*
 repl-result-out*
-
-# dev shell artifacts
-.direnv
-.pre-commit-config.yaml
-
-# vimnix artifacts
-generated.lua
