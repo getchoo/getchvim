@@ -6,6 +6,7 @@
   wrapNeovimUnstable,
   neovim-unwrapped,
   actionlint,
+  glow,
   ripgrep,
   nil,
   nixfmt-rfc-style,
@@ -51,6 +52,7 @@ let
 
     # editing
     flash-nvim
+    glow-nvim
     mini-nvim
 
     telescope-nvim # dependent on >
@@ -74,15 +76,11 @@ let
   ];
 
   extraPackages = [
-    # cmp
-    ripgrep
+    glow # glow.nvim
 
-    # linters
-    nodePackages.alex
-    actionlint
-    statix
+    ripgrep # cmp
 
-    # lspconfig
+    # lsp
     nodePackages.bash-language-server
     shellcheck
     shfmt
@@ -91,6 +89,11 @@ let
     nixfmt-rfc-style
 
     typos-lsp
+
+    ## linters
+    nodePackages.alex
+    actionlint
+    statix
   ];
 
   baseConfig = neovimUtils.makeNeovimConfig {
