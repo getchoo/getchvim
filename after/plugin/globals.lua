@@ -1,4 +1,4 @@
--- for deno's lsp
-vim.g.markdown_fenced_languages = {
+vim.g.mapleader = ","
+vim.g.do_filetype_lua = {
 	"ts=typescript",
 }

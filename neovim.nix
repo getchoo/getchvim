@@ -101,11 +101,7 @@ let
   };
 
   config = baseConfig // {
-    # init our configuration
-    luaRcContent = ''
-      require("getchoo")
-    '';
-
+    luaRcContent = "require('getchoo')";
     wrapperArgs = baseConfig.wrapperArgs ++ [
       "--suffix"
       "PATH"
