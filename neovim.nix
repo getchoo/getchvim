@@ -29,6 +29,7 @@ let
         fs.unions [
           ./after
           ./ftdetect
+          ./lua
           ./plugin
         ]
       );
