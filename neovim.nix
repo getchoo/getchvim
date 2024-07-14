@@ -1,6 +1,7 @@
 {
   lib,
   neovimUtils,
+  vimUtils,
   vimPlugins,
   wrapNeovimUnstable,
   neovim-unwrapped,
@@ -14,11 +15,30 @@
   shellcheck,
   statix,
   typos-lsp,
-  vimPlugins-getchoo-nvim,
-  ...
+  version,
 }:
 let
+  fs = lib.fileset;
+  vimPlugins-getchoo-nvim = vimUtils.buildVimPlugin {
+    pname = "getchoo-neovim-config";
+    inherit version;
+
+    src = fs.toSource {
+      root = ./.;
+      fileset = fs.intersection (fs.gitTracked ./.) (
+        fs.unions [
+          ./after
+          ./ftdetect
+          ./lua
+          ./plugin
+        ]
+      );
+    };
+  };
+
   plugins = with vimPlugins; [
+    vimPlugins-getchoo-nvim
+
     bufferline-nvim
     # dependent on >
     nvim-web-devicons
@@ -78,20 +98,23 @@ let
     typos-lsp
   ];
 
-  neovimConfig = neovimUtils.makeNeovimConfig { plugins = plugins ++ [ vimPlugins-getchoo-nvim ]; };
-in
-wrapNeovimUnstable neovim-unwrapped (
-  neovimConfig
-  // {
+  baseConfig = neovimUtils.makeNeovimConfig {
+    withRuby = false;
+    inherit plugins;
+  };
+
+  config = baseConfig // {
+    # init our configuration
     luaRcContent = ''
       require("getchoo")
     '';
 
-    wrapperArgs = neovimConfig.wrapperArgs ++ [
+    wrapperArgs = baseConfig.wrapperArgs ++ [
       "--suffix"
       "PATH"
       ":"
       "${lib.makeBinPath extraPackages}"
     ];
-  }
-)
+  };
+in
+wrapNeovimUnstable neovim-unwrapped config

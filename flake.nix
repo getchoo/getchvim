@@ -1,11 +1,15 @@
 {
   description = "getchoo's neovim config";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+  };
 
   outputs =
     { self, nixpkgs }:
     let
+      inherit (nixpkgs) lib;
+
       systems = [
         "x86_64-linux"
         "aarch64-linux"
@@ -13,7 +17,7 @@
         "aarch64-darwin"
       ];
 
-      forAllSystems = nixpkgs.lib.genAttrs systems;
+      forAllSystems = lib.genAttrs systems;
       nixpkgsFor = forAllSystems (system: nixpkgs.legacyPackages.${system});
     in
     {
@@ -21,19 +25,41 @@
         system:
         let
           pkgs = nixpkgsFor.${system};
+          fs = lib.fileset;
+
+          root = fs.toSource {
+            root = ./.;
+            fileset = fs.unions [
+              # ci workflows
+              ./.github
+
+              # lua configuration
+              ./after
+              ./ftdetect
+              ./lua
+              ./plugin
+              ./selene.toml
+              ./nvim.yaml
+
+              # nix
+              ./flake.nix
+              ./neovim.nix
+            ];
+          };
         in
         {
-          check-formatting =
-            pkgs.runCommand "check-formatting"
+          check-format-and-lint =
+            pkgs.runCommand "check-format-and-lint"
               {
                 nativeBuildInputs = [
                   pkgs.actionlint
                   pkgs.nixfmt-rfc-style
-                  pkgs.stylua
+                  pkgs.selene
+                  pkgs.statix
                 ];
               }
               ''
-                cd ${./.}
+                cd ${root}
 
                 echo "running actionlint..."
                 actionlint ./.github/workflows/*
@@ -41,31 +67,15 @@
                 echo "running nixfmt..."
                 nixfmt --check .
 
-                echo "running stylua..."
-                stylua --check .
-
-                touch $out
-              '';
-
-          check-lint =
-            pkgs.runCommand "check-lint"
-              {
-                nativeBuildInputs = [
-                  pkgs.selene
-                  pkgs.statix
-                ];
-              }
-              ''
-                cd ${./.}
-
-                echo "running selene..."
-                selene .
+                echo "running selene...."
+                selene **/*.lua
 
                 echo "running statix..."
                 statix check .
 
                 touch $out
               '';
+
         }
       );
 
@@ -96,24 +106,12 @@
 
       formatter = forAllSystems (system: nixpkgsFor.${system}.nixfmt-rfc-style);
 
-      packages = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgsFor.${system};
-
-          packages' = self.packages.${system};
+      packages = forAllSystems (system: {
+        getchvim = nixpkgsFor.${system}.callPackage ./neovim.nix {
           version = self.shortRev or self.dirtyShortRev or "unknown";
-        in
-        {
-          getchvim = pkgs.callPackage ./neovim.nix {
-            inherit version;
-            inherit (packages') vimPlugins-getchoo-nvim;
-          };
+        };
 
-          vimPlugins-getchoo-nvim = pkgs.callPackage ./config { inherit version; };
-
-          default = packages'.getchvim;
-        }
-      );
+        default = self.packages.${system}.getchvim;
+      });
     };
 }
