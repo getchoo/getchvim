@@ -6,13 +6,12 @@
   wrapNeovimUnstable,
   neovim-unwrapped,
   actionlint,
-  beautysh,
   ripgrep,
-  efm-langserver,
   nil,
   nixfmt-rfc-style,
   nodePackages,
   shellcheck,
+  shfmt,
   statix,
   typos-lsp,
   version,
@@ -29,7 +28,6 @@ let
         fs.unions [
           ./after
           ./ftdetect
-          ./lua
           ./plugin
         ]
       );
@@ -52,16 +50,15 @@ let
     cmp-nvim-lsp
     cmp-rg
 
-    efmls-configs-nvim
-
     fidget-nvim
     flash-nvim
     gitsigns-nvim
 
     indent-blankline-nvim
 
-    lsp-format-nvim
     nvim-lspconfig
+    lsp-format-nvim
+    nvim-lint
 
     lualine-nvim
 
@@ -80,18 +77,19 @@ let
     # cmp
     ripgrep
 
-    # efmls-configs
-    efm-langserver
+    # linters
     nodePackages.alex
     actionlint
-    beautysh
     statix
 
     # lspconfig
     nodePackages.bash-language-server
     shellcheck
+    shfmt
+
     nil
     nixfmt-rfc-style
+
     typos-lsp
   ];
 
