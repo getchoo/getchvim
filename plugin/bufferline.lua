@@ -12,14 +12,5 @@ require("bufferline").setup({
 		mode = "buffers",
 		numbers = "ordinal",
 		separator_style = "slant",
-
-		offsets = {
-			{
-				filetype = "neo-tree",
-				text = "neo-tree",
-				highlight = "Directory",
-				text_align = "left",
-			},
-		},
 	},
 })

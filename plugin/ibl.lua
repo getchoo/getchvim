@@ -7,11 +7,7 @@ require("ibl").setup({
 	exclude = {
 		filetypes = {
 			"help",
-			"neo-tree",
 			"Trouble",
-			"lazy",
-			"mason",
-			"notify",
 			"toggleterm",
 		},
 	},
@@ -22,6 +18,7 @@ require("ibl").setup({
 	},
 
 	scope = {
+		-- Let mini.nvim handle this
 		enabled = false,
 	},
 })
