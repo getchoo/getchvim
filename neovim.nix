@@ -52,8 +52,6 @@ let
     cmp-nvim-lsp
     cmp-rg
 
-    dressing-nvim
-
     efmls-configs-nvim
 
     fidget-nvim
@@ -76,7 +74,6 @@ let
     nvim-treesitter.withAllGrammars
 
     trouble-nvim
-    which-key-nvim
   ];
 
   extraPackages = [
