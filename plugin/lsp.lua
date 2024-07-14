@@ -28,7 +28,7 @@ local lsp_servers = {
 
 	efm = {
 		binary = "efm-langserver",
-		extraOptions = require("getchoo.efmls"),
+		extraOptions = require("getchoo.plugins.efmls"),
 	},
 
 	lua_ls = {
