@@ -26,11 +26,7 @@ local lsp_servers = {
 		binary = "vscode-eslint-language-server",
 	},
 
-	efm = {
-		binary = "efm-langserver",
-		extraOptions = require("getchoo.plugins.efmls"),
-	},
-
+	-- TODO: I WANT STYLUA BACK!!
 	lua_ls = {
 		binary = "lua-language-server",
 		extraOptions = {
@@ -38,7 +34,7 @@ local lsp_servers = {
 				Lua = {
 					runtime = { version = "LuaJIT" },
 					diagnostics = { globals = "vim" },
-					workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+					workspace = { checkThirdPaty = false, library = { vim.env.VIMRUNTIME } },
 				},
 			},
 		},
@@ -84,7 +80,9 @@ local lsp_servers = {
 		binary = "rust-analyzer",
 		extraOptions = {
 			settings = {
-				checkOnSave = { command = "clippy" },
+				["rust-analyzer"] = {
+					check = { command = "clippy" },
+				},
 			},
 		},
 	},
