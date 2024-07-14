@@ -2,3 +2,8 @@
 result
 result-*
 repl-result-out*
+
+# direnv
+.env*
+!.envrc
+.direnv/
