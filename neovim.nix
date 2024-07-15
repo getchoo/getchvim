@@ -48,6 +48,7 @@ let
     cmp-nvim-lsp
     cmp-rg
 
+    crates-nvim
     gitsigns-nvim
     nvim-lint
 
