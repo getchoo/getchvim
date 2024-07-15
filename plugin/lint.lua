@@ -1,3 +1,8 @@
+if vim.g.did_load_lint_plugin then
+	return
+end
+vim.g.did_load_lint_plugin = true
+
 require("lint").linters_by_ft = {
 	githubaction = { "actionlint" },
 	lua = { "selene" },
