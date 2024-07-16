@@ -1,0 +1,20 @@
+{
+  imports = [
+    ./bufferline.nix
+    ./cmp.nix
+    ./crates.nix
+    ./fidget.nix
+    ./flash.nix
+    ./gitsigns.nix
+    ./glow.nix
+    ./ibl.nix
+    ./lint.nix
+    ./lsp
+    ./lsp-format.nix
+    ./lualine.nix
+    ./mini.nix
+    ./telescope.nix
+    ./treesitter.nix
+    ./trouble.nix
+  ];
+}

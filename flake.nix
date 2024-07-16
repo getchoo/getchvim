@@ -3,12 +3,32 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+
+        devshell.follows = "";
+        flake-compat.follows = "";
+        git-hooks.follows = "";
+        home-manager.follows = "";
+        nix-darwin.follows = "";
+        treefmt-nix.follows = "";
+      };
+    };
   };
 
   outputs =
-    { self, nixpkgs }:
-    let
-      inherit (nixpkgs) lib;
+    inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [ ./dev ];
 
       systems = [
         "x86_64-linux"
@@ -17,101 +37,23 @@
         "aarch64-darwin"
       ];
 
-      forAllSystems = lib.genAttrs systems;
-      nixpkgsFor = forAllSystems (system: nixpkgs.legacyPackages.${system});
-    in
-    {
-      checks = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgsFor.${system};
-          fs = lib.fileset;
-
-          root = fs.toSource {
-            root = ./.;
-            fileset = fs.unions [
-              # ci workflows
-              ./.github
-
-              # lua configuration
-              ./after
-              ./ftdetect
-              ./lua
-              ./plugin
-              ./selene.toml
-              ./nvim.yaml
-
-              # nix
-              ./flake.nix
-              ./neovim.nix
-            ];
-          };
-        in
+      perSystem =
         {
-          check-format-and-lint =
-            pkgs.runCommand "check-format-and-lint"
-              {
-                nativeBuildInputs = [
-                  pkgs.actionlint
-                  pkgs.nixfmt-rfc-style
-                  pkgs.selene
-                  pkgs.statix
-                ];
-              }
-              ''
-                cd ${root}
-
-                echo "running actionlint..."
-                actionlint ./.github/workflows/*
-
-                echo "running nixfmt..."
-                nixfmt --check .
-
-                echo "running selene...."
-                selene **/*.lua
-
-                echo "running statix..."
-                statix check .
-
-                touch $out
-              '';
-
-        }
-      );
-
-      devShells = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgsFor.${system};
-        in
+          pkgs,
+          inputs',
+          self',
+          ...
+        }:
         {
-          default = pkgs.mkShellNoCC {
-            packages = [
-              pkgs.actionlint
+          packages = {
+            getchvim = inputs'.nixvim.legacyPackages.makeNixvimWithModule {
+              inherit pkgs;
+              module = import ./nixvim;
+            };
 
-              # lua
-              pkgs.lua-language-server
-              pkgs.selene
-              pkgs.stylua
-
-              # nix
-              self.formatter.${system}
-              pkgs.deadnix
-              pkgs.nil
-              pkgs.statix
-            ];
+            default = self'.packages.getchvim;
           };
-        }
-      );
-
-      formatter = forAllSystems (system: nixpkgsFor.${system}.nixfmt-rfc-style);
-
-      packages = forAllSystems (system: {
-        getchvim = nixpkgsFor.${system}.callPackage ./neovim.nix {
-          version = self.shortRev or self.dirtyShortRev or "unknown";
         };
 
-        default = self.packages.${system}.getchvim;
-      });
     };
 }
