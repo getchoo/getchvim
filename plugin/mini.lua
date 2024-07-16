@@ -3,7 +3,14 @@ if vim.g.did_load_mini_plugin then
 end
 vim.g.did_load_mini_plugin = true
 
+local hipatterns = require("mini.hipatterns")
+
 require("mini.files").setup()
+hipatterns.setup({
+	highlighters = {
+		hex_color = hipatterns.gen_highlighter.hex_color(),
+	},
+})
 require("mini.indentscope").setup({
 	options = { try_as_border = true },
 })
