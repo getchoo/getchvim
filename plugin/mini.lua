@@ -3,12 +3,11 @@ if vim.g.did_load_mini_plugin then
 end
 vim.g.did_load_mini_plugin = true
 
-require("mini.comment").setup()
 require("mini.files").setup()
-require("mini.pairs").setup()
 require("mini.indentscope").setup({
 	options = { try_as_border = true },
 })
+require("mini.pairs").setup()
 
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = {
