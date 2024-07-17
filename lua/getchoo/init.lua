@@ -3,7 +3,9 @@ local opt = vim.opt
 
 g.mapleader = ","
 
+-- indent options
 opt.shiftwidth = 2
+opt.tabstop = 2
 
 -- line stuff
 opt.number = true
