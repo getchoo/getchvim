@@ -3,10 +3,19 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
+    vim-tera = {
+      url = "github:vkhitrin/vim-tera";
+      flake = false;
+    };
   };
 
   outputs =
-    { self, nixpkgs }:
+    {
+      self,
+      nixpkgs,
+      vim-tera,
+    }:
     let
       inherit (nixpkgs) lib;
 
@@ -25,27 +34,6 @@
         system:
         let
           pkgs = nixpkgsFor.${system};
-          fs = lib.fileset;
-
-          root = fs.toSource {
-            root = ./.;
-            fileset = fs.unions [
-              # ci workflows
-              ./.github
-
-              # lua configuration
-              ./after
-              ./ftdetect
-              ./lua
-              ./plugin
-              ./selene.toml
-              ./nvim.yaml
-
-              # nix
-              ./flake.nix
-              ./neovim.nix
-            ];
-          };
         in
         {
           check-format-and-lint =
@@ -59,7 +47,7 @@
                 ];
               }
               ''
-                cd ${root}
+                cd ${self}
 
                 echo "running actionlint..."
                 actionlint ./.github/workflows/*
@@ -106,12 +94,50 @@
 
       formatter = forAllSystems (system: nixpkgsFor.${system}.nixfmt-rfc-style);
 
-      packages = forAllSystems (system: {
-        getchvim = nixpkgsFor.${system}.callPackage ./neovim.nix {
-          version = self.shortRev or self.dirtyShortRev or "unknown";
-        };
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgsFor.${system};
 
-        default = self.packages.${system}.getchvim;
-      });
+          dateFrom =
+            flake:
+            let
+              # YYYYMMDD
+              date = builtins.substring 0 8 flake.lastModifiedDate;
+              # YYYY
+              year = builtins.substring 0 4 date;
+              # MM
+              month = builtins.substring 4 2 date;
+              # DD
+              day = builtins.substring 6 2 date;
+            in
+            builtins.concatStringsSep "-" [
+              year
+              month
+              day
+            ];
+
+        in
+        {
+          getchvim = pkgs.callPackage (self + "/neovim.nix") {
+            inherit (self.packages.${system}) getchoo-neovim-config vim-tera;
+          };
+
+          getchoo-neovim-config = pkgs.vimUtils.buildVimPlugin {
+            pname = "getchoo-neovim-config";
+            version = "0-unstable-" + dateFrom self;
+
+            src = self;
+          };
+
+          vim-tera = pkgs.vimUtils.buildVimPlugin {
+            pname = "vim-tera";
+            version = "0-unstable-" + dateFrom vim-tera;
+            src = vim-tera;
+          };
+
+          default = self.packages.${system}.getchvim;
+        }
+      );
     };
 }

@@ -1,43 +1,25 @@
 {
   lib,
   neovimUtils,
-  vimUtils,
   vimPlugins,
   wrapNeovimUnstable,
   neovim-unwrapped,
   actionlint,
+  getchoo-neovim-config,
   glow,
-  ripgrep,
   nil,
   nixfmt-rfc-style,
   nodePackages,
+  ripgrep,
   shellcheck,
   shfmt,
   statix,
   typos-lsp,
-  version,
+  vim-tera,
 }:
 let
-  fs = lib.fileset;
-  vimPlugins-getchoo-nvim = vimUtils.buildVimPlugin {
-    pname = "getchoo-neovim-config";
-    inherit version;
-
-    src = fs.toSource {
-      root = ./.;
-      fileset = fs.intersection (fs.gitTracked ./.) (
-        fs.unions [
-          ./after
-          ./ftdetect
-          ./lua
-          ./plugin
-        ]
-      );
-    };
-  };
-
   plugins = with vimPlugins; [
-    vimPlugins-getchoo-nvim
+    getchoo-neovim-config
 
     # coding
     nvim-cmp
@@ -61,6 +43,8 @@ let
     plenary-nvim
 
     nvim-treesitter.withAllGrammars
+
+    vim-tera
 
     # ui
     bufferline-nvim # dependent on >
