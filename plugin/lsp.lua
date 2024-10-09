@@ -12,8 +12,6 @@ local lsp_servers = {
 		binary = "bash-language-server",
 	},
 
-	biome = {},
-
 	cssls = {
 		binary = "vscode-css-language-server",
 	},
