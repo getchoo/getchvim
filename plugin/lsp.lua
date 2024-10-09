@@ -14,6 +14,10 @@ local lsp_servers = {
 
 	biome = {},
 
+	cssls = {
+		binary = "vscode-css-language-server",
+	},
+
 	clangd = {},
 
 	denols = {
@@ -24,6 +28,14 @@ local lsp_servers = {
 
 	eslint = {
 		binary = "vscode-eslint-language-server",
+	},
+
+	html = {
+		binary = "vscode-html-language-server",
+	},
+
+	jsonls = {
+		binary = "vscode-json-language-server"
 	},
 
 	-- TODO: I WANT STYLUA BACK!!
