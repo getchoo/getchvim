@@ -14,3 +14,7 @@ opt.wrap = true
 -- ui
 opt.mouse = "a"
 opt.showmode = false -- status line does this
+
+require("lz.n").load("getchoo/plugins")
+
+vim.cmd.colorscheme("catppuccin")

@@ -1,12 +1,9 @@
 {
   lib,
-  neovimUtils,
-  vimPlugins,
-  wrapNeovimUnstable,
-  neovim-unwrapped,
   actionlint,
-  getchoo-neovim-config,
   glow,
+  neovim-unwrapped,
+  neovimUtils,
   nil,
   nixfmt-rfc-style,
   nodePackages,
@@ -14,12 +11,32 @@
   shfmt,
   statix,
   typos-lsp,
+  vimPlugins,
+  wrapNeovimUnstable,
+
+  getchoo-neovim-config,
 }:
+
 let
   plugins = with vimPlugins; [
     getchoo-neovim-config
 
-    # coding
+    # lazy loader
+    lz-n
+
+    # Editing
+    flash-nvim
+    glow-nvim
+    mini-nvim
+
+    nvim-treesitter.withAllGrammars
+
+    # UI
+    catppuccin-nvim
+    indent-blankline-nvim
+    lualine-nvim
+
+    # Coding
     nvim-cmp
     luasnip
     cmp-async-path
@@ -29,23 +46,10 @@ let
     crates-nvim
     gitsigns-nvim
     nvim-lint
-
-    # editing
-    flash-nvim
-    glow-nvim
-    mini-nvim
-
     telescope-nvim # dependent on >
     plenary-nvim
 
-    nvim-treesitter.withAllGrammars
-
-    # ui
-    catppuccin-nvim
-    indent-blankline-nvim
-    lualine-nvim
-
-    # lsp
+    # LSP
     fidget-nvim
     lsp-format-nvim
     nvim-lspconfig
@@ -53,19 +57,21 @@ let
   ];
 
   extraPackages = [
+    # External programs
     glow
 
-    # lsp
+    # LSP
+    ## General
+    typos-lsp
+
+    ## Language-specific
     nodePackages.bash-language-server
     shellcheck
     shfmt
-
     nil
     nixfmt-rfc-style
 
-    typos-lsp
-
-    # linters
+    # Linters
     nodePackages.alex
     actionlint
     statix

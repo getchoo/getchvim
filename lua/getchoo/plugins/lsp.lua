@@ -1,13 +1,3 @@
-if vim.g.did_load_lsp_plugin then
-	return
-end
-vim.g.did_load_lsp_plugin = true
-
-local utils = require("getchoo.utils")
-
-local lsp_format = require("lsp-format")
-lsp_format.setup()
-
 local lsp_servers = {
 	astro = {
 		binary = "astro-ls",
@@ -125,29 +115,43 @@ local caps = vim.tbl_deep_extend(
 
 local setup = {
 	on_attach = function(client, _)
-		lsp_format.on_attach(client)
+		require("lsp-format").on_attach(client)
 	end,
 
 	capabilities = caps,
 }
 
-for server, config in pairs(lsp_servers) do
-	local binary = config.binary or server
 
-	local options = (config.extraOptions == nil) and setup or vim.tbl_extend("keep", config.extraOptions, setup)
+return {
+	{
+		"lspformat.nvim",
+		command = "FormatToggle",
+		keys = { { "<leader>z", "<cmd>FormatToggle<cr>" } },
+		after = function()
+			require("lsp-format").setup()
+		end
+	},
+	{
+		"nvim-lspconfig",
+		event = require("getchoo.utils").lazy_file,
+		keys = {
+			{ "<leader>e",  vim.diagnostic.open_float },
+			{ "[d",         vim.diagnostic.goto_prev },
+			{ "]d",         vim.diagnostic.goto_next },
+			{ "<leader>u",  vim.diagnostic.setloclist },
+			{ "<leader>ca", vim.lsp.buf.code_action }
+		},
+		after = function()
+			local lspconfig = require("lspconfig")
 
-	if vim.fn.executable(binary) == 1 then
-		require("lspconfig")[server].setup(options)
-	end
-end
+			for server, config in pairs(lsp_servers) do
+				local binary = config.binary or server
+				local options = (config.extraOptions == nil) and setup or vim.tbl_extend("keep", config.extraOptions, setup)
 
-local diagnostic = vim.diagnostic
-utils.set_keymap("n", "<leader>e", diagnostic.open_float)
-utils.set_keymap("n", "[d", diagnostic.goto_prev)
-utils.set_keymap("n", "]d", diagnostic.goto_next)
-utils.set_keymap("n", "<leader>u", diagnostic.setloclist)
-utils.set_keymap("n", "<leader>ca", vim.lsp.buf.code_action)
-
-utils.set_keymap("n", "<leader>z", function()
-	vim.cmd("FormatToggle")
-end)
+				if vim.fn.executable(binary) == 1 then
+					lspconfig[server].setup(options)
+				end
+			end
+		end
+	}
+}

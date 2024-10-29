@@ -5,4 +5,6 @@ M.set_keymap = function(mode, key, vimcmd)
 	vim.keymap.set(mode, key, vimcmd, opts)
 end
 
+M.lazy_file = { "BufReadPost", "BufNewFile", "BufWritePre" }
+
 return M

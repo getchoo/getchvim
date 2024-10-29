@@ -22,6 +22,24 @@
 
       forAllSystems = lib.genAttrs systems;
       nixpkgsFor = forAllSystems (system: nixpkgs.legacyPackages.${system});
+
+      date =
+        let
+          # YYYYMMDD
+          date = builtins.substring 0 8 self.lastModifiedDate;
+          # YYYY
+          year = builtins.substring 0 4 date;
+          # MM
+          month = builtins.substring 4 2 date;
+          # DD
+          day = builtins.substring 6 2 date;
+        in
+        builtins.concatStringsSep "-" [
+          year
+          month
+          day
+        ];
+      version = "0-unstable-${date}";
     in
     {
       checks = forAllSystems (
@@ -93,37 +111,19 @@
         let
           pkgs = nixpkgsFor.${system};
 
-          dateFrom =
-            flake:
-            let
-              # YYYYMMDD
-              date = builtins.substring 0 8 flake.lastModifiedDate;
-              # YYYY
-              year = builtins.substring 0 4 date;
-              # MM
-              month = builtins.substring 4 2 date;
-              # DD
-              day = builtins.substring 6 2 date;
-            in
-            builtins.concatStringsSep "-" [
-              year
-              month
-              day
-            ];
+          ourPackages = lib.makeScope pkgs.newScope (final: {
+            getchvim = final.callPackage ./neovim.nix { };
 
+            getchoo-neovim-config = pkgs.vimUtils.buildVimPlugin {
+              pname = "getchoo-neovim-config";
+              inherit version;
+
+              src = self;
+            };
+          });
         in
         {
-          getchvim = pkgs.callPackage (self + "/neovim.nix") {
-            inherit (self.packages.${system}) getchoo-neovim-config;
-          };
-
-          getchoo-neovim-config = pkgs.vimUtils.buildVimPlugin {
-            pname = "getchoo-neovim-config";
-            version = "0-unstable-" + dateFrom self;
-
-            src = self;
-          };
-
+          inherit (ourPackages) getchvim getchoo-neovim-config;
           default = self.packages.${system}.getchvim;
         }
       );
