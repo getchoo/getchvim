@@ -18,24 +18,7 @@
     },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs",
-        "vim-tera": "vim-tera"
-      }
-    },
-    "vim-tera": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1716960700,
-        "narHash": "sha256-Zs3rRAwTp9iZc5oOkiR88j7LX7YmDrEELXt29h+j55w=",
-        "owner": "vkhitrin",
-        "repo": "vim-tera",
-        "rev": "235fb7e7e76dfffc0596fabc1e090880bce48844",
-        "type": "github"
-      },
-      "original": {
-        "owner": "vkhitrin",
-        "repo": "vim-tera",
-        "type": "github"
+        "nixpkgs": "nixpkgs"
       }
     }
   },

@@ -10,12 +10,10 @@
   nil,
   nixfmt-rfc-style,
   nodePackages,
-  ripgrep,
   shellcheck,
   shfmt,
   statix,
   typos-lsp,
-  vim-tera,
 }:
 let
   plugins = with vimPlugins; [
@@ -26,9 +24,7 @@ let
     luasnip
     cmp-async-path
     cmp-buffer
-    cmp_luasnip
     cmp-nvim-lsp
-    cmp-rg
 
     crates-nvim
     gitsigns-nvim
@@ -44,27 +40,20 @@ let
 
     nvim-treesitter.withAllGrammars
 
-    vim-tera
-
     # ui
-    bufferline-nvim # dependent on >
-    nvim-web-devicons
-
     catppuccin-nvim
     indent-blankline-nvim
     lualine-nvim
 
     # lsp
     fidget-nvim
-    nvim-lspconfig
     lsp-format-nvim
+    nvim-lspconfig
     trouble-nvim
   ];
 
   extraPackages = [
-    glow # glow.nvim
-
-    ripgrep # cmp
+    glow
 
     # lsp
     nodePackages.bash-language-server
@@ -76,7 +65,7 @@ let
 
     typos-lsp
 
-    ## linters
+    # linters
     nodePackages.alex
     actionlint
     statix

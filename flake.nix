@@ -3,18 +3,12 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-
-    vim-tera = {
-      url = "github:vkhitrin/vim-tera";
-      flake = false;
-    };
   };
 
   outputs =
     {
       self,
       nixpkgs,
-      vim-tera,
     }:
     let
       inherit (nixpkgs) lib;
@@ -120,7 +114,7 @@
         in
         {
           getchvim = pkgs.callPackage (self + "/neovim.nix") {
-            inherit (self.packages.${system}) getchoo-neovim-config vim-tera;
+            inherit (self.packages.${system}) getchoo-neovim-config;
           };
 
           getchoo-neovim-config = pkgs.vimUtils.buildVimPlugin {
@@ -128,12 +122,6 @@
             version = "0-unstable-" + dateFrom self;
 
             src = self;
-          };
-
-          vim-tera = pkgs.vimUtils.buildVimPlugin {
-            pname = "vim-tera";
-            version = "0-unstable-" + dateFrom vim-tera;
-            src = vim-tera;
           };
 
           default = self.packages.${system}.getchvim;

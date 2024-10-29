@@ -3,6 +3,10 @@ if vim.g.did_load_lsp_plugin then
 end
 vim.g.did_load_lsp_plugin = true
 
+
+local lsp_format = require("lsp-format")
+lsp_format.setup()
+
 local lsp_servers = {
 	astro = {
 		binary = "astro-ls",
@@ -120,7 +124,7 @@ local caps = vim.tbl_deep_extend(
 
 local setup = {
 	on_attach = function(client, _)
-		require("lsp-format").on_attach(client)
+		lsp_format.on_attach(client)
 	end,
 
 	capabilities = caps,

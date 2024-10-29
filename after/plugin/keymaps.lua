@@ -14,16 +14,6 @@ set({ "n", "o", "x" }, "s", function()
 	require("flash").jump()
 end)
 
-for i = 1, 9 do
-	set("n", "<leader>" .. i, function()
-		vim.cmd("BufferLineGoToBuffer " .. i)
-	end)
-end
-
-set("n", "<leader>q", function()
-	vim.cmd("BufferLinePickClose")
-end)
-
 local diagnostic = vim.diagnostic
 set("n", "<leader>e", diagnostic.open_float)
 set("n", "[d", diagnostic.goto_prev)
