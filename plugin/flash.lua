@@ -3,4 +3,11 @@ if vim.g.did_load_flash_plugin then
 end
 vim.g.did_load_flash_plugin = true
 
-require("flash").setup()
+local utils = require("getchoo.utils")
+local flash = require("flash")
+
+flash.setup()
+
+utils.set_keymap({ "n", "o", "x" }, "s", function()
+	flash.jump()
+end)

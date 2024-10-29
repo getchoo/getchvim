@@ -3,6 +3,7 @@ if vim.g.did_load_lsp_plugin then
 end
 vim.g.did_load_lsp_plugin = true
 
+local utils = require("getchoo.utils")
 
 local lsp_format = require("lsp-format")
 lsp_format.setup()
@@ -37,7 +38,7 @@ local lsp_servers = {
 	},
 
 	jsonls = {
-		binary = "vscode-json-language-server"
+		binary = "vscode-json-language-server",
 	},
 
 	-- TODO: I WANT STYLUA BACK!!
@@ -139,3 +140,14 @@ for server, config in pairs(lsp_servers) do
 		require("lspconfig")[server].setup(options)
 	end
 end
+
+local diagnostic = vim.diagnostic
+utils.set_keymap("n", "<leader>e", diagnostic.open_float)
+utils.set_keymap("n", "[d", diagnostic.goto_prev)
+utils.set_keymap("n", "]d", diagnostic.goto_next)
+utils.set_keymap("n", "<leader>u", diagnostic.setloclist)
+utils.set_keymap("n", "<leader>ca", vim.lsp.buf.code_action)
+
+utils.set_keymap("n", "<leader>z", function()
+	vim.cmd("FormatToggle")
+end)
