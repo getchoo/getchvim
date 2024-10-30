@@ -1,7 +1,7 @@
 return {
 	{
 		"nvim-cmp",
-		lazy = false,
+		event = require("getchoo.utils").lazy_file,
 		after = function()
 			local cmp = require("cmp")
 
