@@ -46,36 +46,19 @@
         system:
         let
           pkgs = nixpkgsFor.${system};
+
+          mkCheck =
+            name: deps: script:
+            pkgs.runCommand name { nativeBuildInputs = deps; } ''
+              ${script}
+              touch $out
+            '';
         in
         {
-          check-format-and-lint =
-            pkgs.runCommand "check-format-and-lint"
-              {
-                nativeBuildInputs = [
-                  pkgs.actionlint
-                  pkgs.nixfmt-rfc-style
-                  pkgs.selene
-                  pkgs.statix
-                ];
-              }
-              ''
-                cd ${self}
-
-                echo "running actionlint..."
-                actionlint ./.github/workflows/*
-
-                echo "running nixfmt..."
-                nixfmt --check .
-
-                echo "running selene...."
-                selene **/*.lua
-
-                echo "running statix..."
-                statix check .
-
-                touch $out
-              '';
-
+          actionlint = mkCheck "check-actionlint" [ pkgs.actionlint ] "actionlint ${./.github/workflows}/*";
+          deadnix = mkCheck "check-deadnix" [ pkgs.deadnix ] "deadnix --fail ${self}";
+          selene = mkCheck "check-selene" [ pkgs.selene ] "cd ${self} && selene .";
+          statix = mkCheck "check-statix" [ pkgs.statix ] "statix check ${self}";
         }
       );
 
