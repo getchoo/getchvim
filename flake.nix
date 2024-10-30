@@ -3,12 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nix-filter.url = "github:numtide/nix-filter";
   };
 
   outputs =
     {
       self,
       nixpkgs,
+      nix-filter,
     }:
     let
       inherit (nixpkgs) lib;
@@ -102,7 +104,14 @@
               pname = "getchoo-neovim-config";
               inherit version;
 
-              src = self;
+              src = nix-filter.lib.filter {
+                root = self;
+                include = [
+                  ./lua
+                  ./ftdetect
+                  ./ftplugin
+                ];
+              };
             };
           });
         in
