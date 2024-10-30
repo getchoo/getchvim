@@ -13,14 +13,14 @@
   statix,
   typos-lsp,
   vimPlugins,
-  writeTextDir,
+  writeText,
 }:
 
 mkNeovimDerivation {
   pname = "getchvim";
   inherit version;
 
-  luaRc = writeTextDir "init.lua" "require('getchoo')" + "/init.lua";
+  luaRc = writeText "init.lua" "require('getchoo')";
 
   runtimePrograms = [
     # External programs
