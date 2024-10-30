@@ -1,1 +1,5 @@
 std = "nvim"
+
+[lints]
+# lz.n uses this for its plugin spec
+mixed_table = "allow"

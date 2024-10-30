@@ -1,8 +1,3 @@
-if vim.g.did_load_lsp_plugin then
-	return
-end
-vim.g.did_load_lsp_plugin = true
-
 local lsp_servers = {
 	astro = {
 		binary = "astro-ls",
@@ -33,7 +28,7 @@ local lsp_servers = {
 	},
 
 	jsonls = {
-		binary = "vscode-json-language-server"
+		binary = "vscode-json-language-server",
 	},
 
 	-- TODO: I WANT STYLUA BACK!!
@@ -126,12 +121,37 @@ local setup = {
 	capabilities = caps,
 }
 
-for server, config in pairs(lsp_servers) do
-	local binary = config.binary or server
 
-	local options = (config.extraOptions == nil) and setup or vim.tbl_extend("keep", config.extraOptions, setup)
+return {
+	{
+		"lspformat.nvim",
+		command = "FormatToggle",
+		keys = { { "<leader>z", "<cmd>FormatToggle<cr>" } },
+		after = function()
+			require("lsp-format").setup()
+		end
+	},
+	{
+		"nvim-lspconfig",
+		event = require("getchoo.utils").lazy_file,
+		keys = {
+			{ "<leader>e",  vim.diagnostic.open_float },
+			{ "[d",         vim.diagnostic.goto_prev },
+			{ "]d",         vim.diagnostic.goto_next },
+			{ "<leader>u",  vim.diagnostic.setloclist },
+			{ "<leader>ca", vim.lsp.buf.code_action }
+		},
+		after = function()
+			local lspconfig = require("lspconfig")
 
-	if vim.fn.executable(binary) == 1 then
-		require("lspconfig")[server].setup(options)
-	end
-end
+			for server, config in pairs(lsp_servers) do
+				local binary = config.binary or server
+				local options = (config.extraOptions == nil) and setup or vim.tbl_extend("keep", config.extraOptions, setup)
+
+				if vim.fn.executable(binary) == 1 then
+					lspconfig[server].setup(options)
+				end
+			end
+		end
+	}
+}
