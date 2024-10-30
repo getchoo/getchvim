@@ -65,7 +65,6 @@ mkNeovimDerivation {
 
     # Coding
     nvim-cmp
-    luasnip
     cmp-async-path
     cmp-buffer
     cmp-nvim-lsp

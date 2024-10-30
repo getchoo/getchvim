@@ -15,6 +15,11 @@ opt.wrap = true
 opt.mouse = "a"
 opt.showmode = false -- status line does this
 
+-- don't use remote plugins
+g.loaded_python3_provider = 0
+g.loaded_ruby_provider = 0
+g.loaded_node_provider = 0
+
 require("lz.n").load("getchoo/plugins")
 
 vim.cmd.colorscheme("catppuccin")
