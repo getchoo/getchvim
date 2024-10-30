@@ -46,6 +46,12 @@ mkNeovimDerivation {
   luaPluginPackages =
     luaPackages: with luaPackages; [
       lz-n
+
+      # Coding
+      nvim-cmp
+
+      # LSP
+      fidget-nvim
     ];
 
   vimPluginPackages = with vimPlugins; [
@@ -64,19 +70,19 @@ mkNeovimDerivation {
     lualine-nvim
 
     # Coding
-    nvim-cmp
     cmp-async-path
     cmp-buffer
     cmp-nvim-lsp
 
     crates-nvim
+    ## TODO: Use luarocks plugin when it's not broken
     gitsigns-nvim
     nvim-lint
+    ## TODO: Ditto
     telescope-nvim # dependent on >
     plenary-nvim
 
     # LSP
-    fidget-nvim
     lsp-format-nvim
     nvim-lspconfig
     trouble-nvim
