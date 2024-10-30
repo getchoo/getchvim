@@ -39,7 +39,7 @@
           month
           day
         ];
-      version = "0-unstable-${date}";
+      version = "0-unstable-" + date;
     in
     {
       checks = forAllSystems (
@@ -95,7 +95,8 @@
           pkgs = nixpkgsFor.${system};
 
           ourPackages = lib.makeScope pkgs.newScope (final: {
-            getchvim = final.callPackage ./neovim.nix { };
+            mkNeovimDerivation = final.callPackage ./wrapper.nix { };
+            getchvim = final.callPackage ./neovim.nix { inherit version; };
 
             getchoo-neovim-config = pkgs.vimUtils.buildVimPlugin {
               pname = "getchoo-neovim-config";

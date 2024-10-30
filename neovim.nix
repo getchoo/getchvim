@@ -1,9 +1,10 @@
 {
-  lib,
+  mkNeovimDerivation,
+  getchoo-neovim-config,
+  version,
+
   actionlint,
   glow,
-  neovim-unwrapped,
-  neovimUtils,
   nil,
   nixfmt-rfc-style,
   nodePackages,
@@ -12,17 +13,43 @@
   statix,
   typos-lsp,
   vimPlugins,
-  wrapNeovimUnstable,
-
-  getchoo-neovim-config,
+  writeTextDir,
 }:
 
-let
-  plugins = with vimPlugins; [
-    getchoo-neovim-config
+mkNeovimDerivation {
+  pname = "getchvim";
+  inherit version;
 
-    # lazy loader
-    lz-n
+  luaRc = writeTextDir "init.lua" "require('getchoo')" + "/init.lua";
+
+  runtimePrograms = [
+    # External programs
+    glow
+
+    # LSP
+    ## General
+    typos-lsp
+
+    ## Language-specific
+    nodePackages.bash-language-server
+    shellcheck
+    shfmt
+    nil
+    nixfmt-rfc-style
+
+    # Linters
+    nodePackages.alex
+    actionlint
+    statix
+  ];
+
+  luaPluginPackages =
+    luaPackages: with luaPackages; [
+      lz-n
+    ];
+
+  vimPluginPackages = with vimPlugins; [
+    getchoo-neovim-config
 
     # Editing
     flash-nvim
@@ -55,41 +82,4 @@ let
     nvim-lspconfig
     trouble-nvim
   ];
-
-  extraPackages = [
-    # External programs
-    glow
-
-    # LSP
-    ## General
-    typos-lsp
-
-    ## Language-specific
-    nodePackages.bash-language-server
-    shellcheck
-    shfmt
-    nil
-    nixfmt-rfc-style
-
-    # Linters
-    nodePackages.alex
-    actionlint
-    statix
-  ];
-
-  baseConfig = neovimUtils.makeNeovimConfig {
-    withRuby = false;
-    inherit plugins;
-  };
-
-  config = baseConfig // {
-    luaRcContent = "require('getchoo')";
-    wrapperArgs = baseConfig.wrapperArgs ++ [
-      "--suffix"
-      "PATH"
-      ":"
-      "${lib.makeBinPath extraPackages}"
-    ];
-  };
-in
-wrapNeovimUnstable neovim-unwrapped config
+}
