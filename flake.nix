@@ -3,12 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nix-filter.url = "github:numtide/nix-filter";
   };
 
   outputs =
     {
       self,
       nixpkgs,
+      nix-filter,
     }:
     let
       inherit (nixpkgs) lib;
@@ -39,7 +41,7 @@
           month
           day
         ];
-      version = "0-unstable-${date}";
+      version = "0-unstable-" + date;
     in
     {
       checks = forAllSystems (
@@ -95,13 +97,21 @@
           pkgs = nixpkgsFor.${system};
 
           ourPackages = lib.makeScope pkgs.newScope (final: {
-            getchvim = final.callPackage ./neovim.nix { };
+            mkNeovimDerivation = final.callPackage ./wrapper.nix { };
+            getchvim = final.callPackage ./neovim.nix { inherit version; };
 
             getchoo-neovim-config = pkgs.vimUtils.buildVimPlugin {
               pname = "getchoo-neovim-config";
               inherit version;
 
-              src = self;
+              src = nix-filter.lib.filter {
+                root = self;
+                include = [
+                  ./lua
+                  ./ftdetect
+                  ./ftplugin
+                ];
+              };
             };
           });
         in

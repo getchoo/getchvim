@@ -1,9 +1,10 @@
 {
-  lib,
+  mkNeovimDerivation,
+  getchoo-neovim-config,
+  version,
+
   actionlint,
   glow,
-  neovim-unwrapped,
-  neovimUtils,
   nil,
   nixfmt-rfc-style,
   nodePackages,
@@ -12,51 +13,16 @@
   statix,
   typos-lsp,
   vimPlugins,
-  wrapNeovimUnstable,
-
-  getchoo-neovim-config,
+  writeTextDir,
 }:
 
-let
-  plugins = with vimPlugins; [
-    getchoo-neovim-config
+mkNeovimDerivation {
+  pname = "getchvim";
+  inherit version;
 
-    # lazy loader
-    lz-n
+  luaRc = writeTextDir "init.lua" "require('getchoo')" + "/init.lua";
 
-    # Editing
-    flash-nvim
-    glow-nvim
-    mini-nvim
-
-    nvim-treesitter.withAllGrammars
-
-    # UI
-    catppuccin-nvim
-    indent-blankline-nvim
-    lualine-nvim
-
-    # Coding
-    nvim-cmp
-    luasnip
-    cmp-async-path
-    cmp-buffer
-    cmp-nvim-lsp
-
-    crates-nvim
-    gitsigns-nvim
-    nvim-lint
-    telescope-nvim # dependent on >
-    plenary-nvim
-
-    # LSP
-    fidget-nvim
-    lsp-format-nvim
-    nvim-lspconfig
-    trouble-nvim
-  ];
-
-  extraPackages = [
+  runtimePrograms = [
     # External programs
     glow
 
@@ -77,19 +43,48 @@ let
     statix
   ];
 
-  baseConfig = neovimUtils.makeNeovimConfig {
-    withRuby = false;
-    inherit plugins;
-  };
+  luaPluginPackages =
+    luaPackages: with luaPackages; [
+      lz-n
 
-  config = baseConfig // {
-    luaRcContent = "require('getchoo')";
-    wrapperArgs = baseConfig.wrapperArgs ++ [
-      "--suffix"
-      "PATH"
-      ":"
-      "${lib.makeBinPath extraPackages}"
+      # Coding
+      nvim-cmp
+
+      # LSP
+      fidget-nvim
     ];
-  };
-in
-wrapNeovimUnstable neovim-unwrapped config
+
+  vimPluginPackages = with vimPlugins; [
+    getchoo-neovim-config
+
+    # Editing
+    flash-nvim
+    glow-nvim
+    mini-nvim
+
+    nvim-treesitter.withAllGrammars
+
+    # UI
+    catppuccin-nvim
+    indent-blankline-nvim
+    lualine-nvim
+
+    # Coding
+    cmp-async-path
+    cmp-buffer
+    cmp-nvim-lsp
+
+    crates-nvim
+    ## TODO: Use luarocks plugin when it's not broken
+    gitsigns-nvim
+    nvim-lint
+    ## TODO: Ditto
+    telescope-nvim # dependent on >
+    plenary-nvim
+
+    # LSP
+    lsp-format-nvim
+    nvim-lspconfig
+    trouble-nvim
+  ];
+}
