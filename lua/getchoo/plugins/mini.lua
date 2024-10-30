@@ -35,10 +35,11 @@ return {
 				},
 			})
 
+			require("mini.icons").setup()
 			require("mini.indentscope").setup({
 				options = { try_as_border = true },
 			})
-			require("mini.pairs").setup()
+			require("mini.surround").setup()
 		end,
 	}
 }
