@@ -70,8 +70,7 @@ local lsp_servers = {
 		},
 	},
 
-	ruff_lsp = {
-		binary = "ruff-lsp",
+	ruff = {
 		extraOptions = {
 			on_attach = function(client, _)
 				require("lsp-format").on_attach(client)
