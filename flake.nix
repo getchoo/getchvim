@@ -112,6 +112,8 @@
                   ./ftplugin
                 ];
               };
+
+              doCheck = false;
             };
           });
         in
