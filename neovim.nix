@@ -5,7 +5,7 @@
 
   actionlint,
   glow,
-  nil,
+  nixd,
   nixfmt-rfc-style,
   nodePackages,
   shellcheck,
@@ -34,7 +34,7 @@ mkNeovimDerivation {
     nodePackages.bash-language-server
     shellcheck
     shfmt
-    nil
+    nixd
     nixfmt-rfc-style
 
     # Linters

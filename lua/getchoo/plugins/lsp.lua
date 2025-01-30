@@ -45,19 +45,27 @@ local lsp_servers = {
 		},
 	},
 
-	nil_ls = {
-		binary = "nil",
+	nim_langserver = {
+		binary = "nimlangserver",
+	},
+
+	nixd = {
+		binary = "nixd",
 		extraOptions = {
 			settings = {
-				["nil"] = {
+				nixd = {
 					formatting = { command = { "nixfmt" } },
+					nixpkgs = {
+						expr = "import <nixpkgs> { config = { allowUnfree = true; }; overlays = [ ]; }",
+					},
+					options = {
+						nixos = {
+							expr = '((import <nixpkgs> { config = { allowUnfree = true; }; overlays = [ ]; }).nixos { }).options',
+						},
+					},
 				},
 			},
 		},
-	},
-
-	nim_langserver = {
-		binary = "nimlangserver",
 	},
 
 	pyright = {

@@ -1,3 +1,3 @@
 # getchvim
 
-my "from scratch" neovim config. figured i would make it separate from my overengineered [flake](https://github.com/getchoo/flake)
+My "from scratch" Neovim config. Figured I would make it separate from my [Flake](https://github.com/getchoo/borealis)
