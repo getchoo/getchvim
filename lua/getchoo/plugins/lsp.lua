@@ -99,6 +99,10 @@ local lsp_servers = {
 		},
 	},
 
+	terraformls = {
+		binary = "terraform-ls",
+	},
+
 	ts_ls = {
 		binary = "typescript-language-server",
 	},
