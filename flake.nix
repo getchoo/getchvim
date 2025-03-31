@@ -3,14 +3,12 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nix-filter.url = "github:numtide/nix-filter";
   };
 
   outputs =
     {
       self,
       nixpkgs,
-      nix-filter,
     }:
     let
       inherit (nixpkgs) lib;
@@ -27,16 +25,14 @@
 
       date =
         let
-          # YYYYMMDD
-          date = builtins.substring 0 8 self.lastModifiedDate;
           # YYYY
-          year = builtins.substring 0 4 date;
+          year = lib.substring 0 4 self.lastModifiedDate;
           # MM
-          month = builtins.substring 4 2 date;
+          month = lib.substring 4 2 self.lastModifiedDate;
           # DD
-          day = builtins.substring 6 2 date;
+          day = lib.substring 6 2 self.lastModifiedDate;
         in
-        builtins.concatStringsSep "-" [
+        lib.concatStringsSep "-" [
           year
           month
           day
@@ -104,9 +100,9 @@
               pname = "getchoo-neovim-config";
               inherit version;
 
-              src = nix-filter.lib.filter {
-                root = self;
-                include = [
+              src = lib.fileset.toSource {
+                root = ./.;
+                fileset = lib.fileset.unions [
                   ./lua
                   ./ftdetect
                   ./ftplugin
