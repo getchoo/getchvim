@@ -1,5 +1,5 @@
 {
-  mkNeovimDerivation,
+  mkNeovimWrapper,
   getchoo-neovim-config,
   version,
 
@@ -16,7 +16,7 @@
   writeText,
 }:
 
-mkNeovimDerivation {
+mkNeovimWrapper (finalAttrs: {
   pname = "getchvim";
   inherit version;
 
@@ -43,16 +43,15 @@ mkNeovimDerivation {
     statix
   ];
 
-  luaPluginPackages =
-    luaPackages: with luaPackages; [
-      lz-n
+  luaPluginPackages = with finalAttrs.finalPackage.lua.pkgs; [
+    lz-n
 
-      # Coding
-      nvim-cmp
+    # Coding
+    nvim-cmp
 
-      # LSP
-      fidget-nvim
-    ];
+    # LSP
+    fidget-nvim
+  ];
 
   vimPluginPackages = with vimPlugins; [
     getchoo-neovim-config
@@ -87,4 +86,4 @@ mkNeovimDerivation {
     nvim-lspconfig
     trouble-nvim
   ];
-}
+})

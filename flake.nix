@@ -93,7 +93,7 @@
           pkgs = nixpkgsFor.${system};
 
           ourPackages = lib.makeScope pkgs.newScope (final: {
-            mkNeovimDerivation = final.callPackage ./wrapper.nix { };
+            mkNeovimWrapper = final.callPackage ./wrapper.nix { };
             getchvim = final.callPackage ./neovim.nix { inherit version; };
 
             getchoo-neovim-config = pkgs.vimUtils.buildVimPlugin {
