@@ -5,13 +5,13 @@
 
   actionlint,
   glow,
+  harper,
   nixd,
   nixfmt-rfc-style,
   nodePackages,
   shellcheck,
   shfmt,
   statix,
-  typos-lsp,
   vimPlugins,
   writeText,
 }:
@@ -28,7 +28,7 @@ mkNeovimWrapper (finalAttrs: {
 
     # LSP
     ## General
-    typos-lsp
+    harper
 
     ## Language-specific
     nodePackages.bash-language-server

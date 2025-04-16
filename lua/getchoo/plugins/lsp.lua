@@ -23,6 +23,10 @@ local lsp_servers = {
 		binary = "vscode-eslint-language-server",
 	},
 
+	harper_ls = {
+		binary = "harper-ls"
+	},
+
 	html = {
 		binary = "vscode-html-language-server",
 	},
