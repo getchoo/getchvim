@@ -5,6 +5,7 @@
 
   actionlint,
   glow,
+  harper,
   nixd,
   nixfmt-rfc-style,
   nodePackages,
@@ -29,6 +30,7 @@ mkNeovimWrapper (finalAttrs: {
     # LSP
     ## General
     typos-lsp
+    harper
 
     ## Language-specific
     nodePackages.bash-language-server
