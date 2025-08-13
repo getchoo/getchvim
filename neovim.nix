@@ -6,7 +6,7 @@
   actionlint,
   glow,
   harper,
-  nixd,
+  nil,
   nixfmt-rfc-style,
   nodePackages,
   shellcheck,
@@ -36,7 +36,7 @@ mkNeovimWrapper (finalAttrs: {
     nodePackages.bash-language-server
     shellcheck
     shfmt
-    nixd
+    nil
     nixfmt-rfc-style
 
     # Linters
