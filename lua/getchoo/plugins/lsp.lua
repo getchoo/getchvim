@@ -52,25 +52,10 @@ local lsp_servers = {
 		},
 	},
 
-	nil_ls = {
-		binary = "nil",
-		settings = {
-			["nil"] = {
-				formatting = {
-					command = { "nixfmt" }
-				},
-				nix = {
-					flake = { autoArchive = nil }
-				}
-			}
-		}
-	},
-
 	nim_langserver = {
 		binary = "nimlangserver",
 	},
 
-	--[[
 	nixd = {
 		binary = "nixd",
 		extraOptions = {
@@ -89,7 +74,6 @@ local lsp_servers = {
 			},
 		},
 	},
-	]]
 
 	pyright = {
 		extraOptions = {
