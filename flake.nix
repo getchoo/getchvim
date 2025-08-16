@@ -87,17 +87,14 @@
 
       formatter = forAllSystems (system: nixpkgsFor.${system}.nixfmt-rfc-style);
 
-      packages = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgsFor.${system};
+      overlays.default = final: prev: {
+        getchvim = final.callPackage ./neovim.nix { inherit version; };
+        mkNeovimWrapper = final.callPackage ./wrapper.nix { };
 
-          ourPackages = lib.makeScope pkgs.newScope (final: {
-            mkNeovimWrapper = final.callPackage ./wrapper.nix { };
-            getchvim = final.callPackage ./neovim.nix { inherit version; };
-
-            getchoo-neovim-config = pkgs.vimUtils.buildVimPlugin {
-              pname = "getchoo-neovim-config";
+        vimPlugins = prev.vimPlugins.extend (
+          final': _: {
+            getchoo = final.vimUtils.buildVimPlugin {
+              pname = "getchoo";
               inherit version;
 
               src = lib.fileset.toSource {
@@ -111,10 +108,23 @@
 
               doCheck = false;
             };
-          });
+          }
+        );
+      };
+
+      packages = forAllSystems (
+        system:
+
+        let
+          pkgs = nixpkgsFor.${system};
+
+          packageSet = lib.makeScope pkgs.newScope (
+            final: { inherit (pkgs) vimUtils vimPlugins; } // self.overlays.default final pkgs
+          );
         in
+
         {
-          inherit (ourPackages) getchvim getchoo-neovim-config;
+          inherit (packageSet) getchvim;
           default = self.packages.${system}.getchvim;
         }
       );

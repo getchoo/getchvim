@@ -1,6 +1,5 @@
 {
   mkNeovimWrapper,
-  getchoo-neovim-config,
   version,
 
   actionlint,
@@ -59,7 +58,7 @@ mkNeovimWrapper (finalAttrs: {
   ];
 
   vimPluginPackages = with vimPlugins; [
-    getchoo-neovim-config
+    getchoo
 
     # Editing
     flash-nvim
