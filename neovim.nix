@@ -3,11 +3,12 @@
   version,
 
   actionlint,
+  bash-language-server,
   glow,
   harper,
   lua,
   nixd,
-  nixfmt-rfc-style,
+  nixfmt,
   nodePackages,
   shellcheck,
   shfmt,
@@ -45,11 +46,11 @@ mkNeovimWrapper (finalAttrs: {
     harper
 
     ## Language-specific
-    nodePackages.bash-language-server
+    bash-language-server
     shellcheck
     shfmt
     nixd
-    nixfmt-rfc-style
+    nixfmt
 
     # Linters
     nodePackages.alex
