@@ -6,6 +6,7 @@
   actionlint,
   glow,
   harper,
+  lua,
   nixd,
   nixfmt-rfc-style,
   nodePackages,
@@ -20,6 +21,18 @@
 mkNeovimWrapper (finalAttrs: {
   pname = "getchvim";
   inherit version;
+
+  luaEnv = lua.withPackages (
+    p: with p; [
+      lz-n
+
+      # Coding
+      nvim-cmp
+
+      # LSP
+      fidget-nvim
+    ]
+  );
 
   luaRc = writeText "init.lua" "require('getchoo')";
 
@@ -43,16 +56,6 @@ mkNeovimWrapper (finalAttrs: {
     nodePackages.alex
     actionlint
     statix
-  ];
-
-  luaPluginPackages = with finalAttrs.finalPackage.lua.pkgs; [
-    lz-n
-
-    # Coding
-    nvim-cmp
-
-    # LSP
-    fidget-nvim
   ];
 
   vimPluginPackages = with vimPlugins; [

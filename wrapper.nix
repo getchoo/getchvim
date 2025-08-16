@@ -10,33 +10,30 @@
 }:
 
 let
-  lua' = lua;
-
-  makeNeovimWrapper = lib.extendMkDerivation {
+  mkNeovimWrapper = lib.extendMkDerivation {
     constructDrv = stdenv.mkDerivation;
 
     extendDrvArgs =
       finalAttrs:
 
-      args@{
+      {
+        pname ? neovim-unwrapped.pname,
         version ? neovim-unwrapped.version,
         nativeBuildInputs ? [ ],
         makeWrapperArgs ? [ ],
         passthru ? { },
         meta ? { },
 
-        luaPluginPackages ? [ ],
-        vimPluginPackages ? [ ],
         runtimePrograms ? [ ],
-        lua ? lua',
         luaRc ? emptyFile,
         ...
-      }:
+      }@args:
 
       let
-        luaEnv = finalAttrs.lua.withPackages (lib.const finalAttrs.luaPluginPackages);
+        luaEnv = finalAttrs.luaEnv or lua.buildEnv;
+        vimPluginPackages = finalAttrs.vimPluginPackages or [ ];
 
-        normalizedPlugins = neovimUtils.normalizePlugins finalAttrs.vimPluginPackages;
+        normalizedPlugins = neovimUtils.normalizePlugins vimPluginPackages;
         neovimPackage = neovimUtils.normalizedPluginsToVimPackage normalizedPlugins;
         packDir = neovimUtils.packDir { inherit neovimPackage; };
 
@@ -45,34 +42,22 @@ let
           set packpath^=${packDir} | set runtimepath^=${packDir}
           luafile ${luaRc}
         '';
-
-        # TODO: Pass all flags in one invocation of --add-flags???
-        addedFlags =
-          lib.concatMap
-            (flag: [
-              "--add-flags"
-              flag
-            ])
-            [
-              "-u"
-              vendorRc
-            ];
       in
 
       {
-        inherit version;
+        inherit pname version;
 
         nativeBuildInputs = nativeBuildInputs ++ [ makeBinaryWrapper ];
 
-        makeWrapperArgs =
-          makeWrapperArgs
-          ++ addedFlags
-          ++ [
-            "--suffix"
-            "PATH"
-            ":"
-            (lib.makeBinPath runtimePrograms)
-          ];
+        __structuredAttrs = true;
+        makeWrapperArgs = makeWrapperArgs ++ [
+          "--add-flags"
+          "-u ${vendorRc}"
+          "--suffix"
+          "PATH"
+          ":"
+          (lib.makeBinPath runtimePrograms)
+        ];
 
         buildCommand =
           args.buildCommand or ''
@@ -82,18 +67,44 @@ let
             makeWrapper ${lib.getExe neovim-unwrapped} $out/bin/nvim "''${makeWrapperArgsArray[@]}"
           '';
 
-        inherit lua luaPluginPackages vimPluginPackages;
-
         passthru = {
-          inherit makeNeovimWrapper;
-          inherit luaEnv;
-        } // passthru;
+          inherit mkNeovimWrapper;
+        }
+        // passthru;
 
         meta = {
           inherit (neovim-unwrapped.meta) description mainProgram;
-        } // meta;
+        }
+        // meta;
       };
   };
 in
 
-makeNeovimWrapper
+/**
+  Create a wrapper for Neovim
+
+  # Example
+
+  ```
+  mkNeovimWrapper { vimPluginPackages = [ pkgs.vimPlugins.nvim-lspconfig ]; }
+  => <drv>
+  ```
+
+  # Type
+
+  ```
+  mkNeovimWrapper :: AttrSet -> Derivation
+  ```
+
+  # Arguments
+
+  - [pname]: package name for the wrapper. defaults to the package name of neovim-unwrapped.
+  - [version]: package version for the wrapper. defaults to the package version of neovim-unwrapped.
+  - [luaRc] (optional): lua configuration file for neovim.
+  - [luaEnv] (optional): lua environment to use for the wrapper.
+  - [makeWrapperArgs] (optional): list of additional arguments to pass to `makeWrapper`.
+  - [runtimePrograms] (optional): list of packages to add to the wrapper's $PATH.
+  - [vimPluginPackages] (optional): list of vim plugin packages to add to the wrapper's runtimepath.
+  - [...]: all the same arguments as `mkDerivation`.
+*/
+mkNeovimWrapper
