@@ -18,7 +18,7 @@
   writeText,
 }:
 
-mkNeovimWrapper (finalAttrs: {
+mkNeovimWrapper {
   pname = "getchvim";
   inherit version;
 
@@ -91,4 +91,4 @@ mkNeovimWrapper (finalAttrs: {
     nvim-lspconfig
     trouble-nvim
   ];
-})
+}

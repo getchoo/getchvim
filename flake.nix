@@ -92,7 +92,7 @@
         mkNeovimWrapper = final.callPackage ./wrapper.nix { };
 
         vimPlugins = prev.vimPlugins.extend (
-          final': _: {
+          _: _: {
             getchoo = final.vimUtils.buildVimPlugin {
               pname = "getchoo";
               inherit version;
