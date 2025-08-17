@@ -4,6 +4,7 @@
 
   actionlint,
   bash-language-server,
+  deadnix,
   glow,
   harper,
   lua,
@@ -12,7 +13,6 @@
   nodePackages,
   shellcheck,
   shfmt,
-  statix,
   typos-lsp,
   vimPlugins,
   writeText,
@@ -55,7 +55,7 @@ mkNeovimWrapper {
     # Linters
     nodePackages.alex
     actionlint
-    statix
+    deadnix
   ];
 
   vimPluginPackages = with vimPlugins; [

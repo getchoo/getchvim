@@ -56,7 +56,6 @@
           actionlint = mkCheck "check-actionlint" [ pkgs.actionlint ] "actionlint ${./.github/workflows}/*";
           deadnix = mkCheck "check-deadnix" [ pkgs.deadnix ] "deadnix --fail ${self}";
           selene = mkCheck "check-selene" [ pkgs.selene ] "cd ${self} && selene .";
-          statix = mkCheck "check-statix" [ pkgs.statix ] "statix check ${self}";
         }
       );
 

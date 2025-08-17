@@ -16,7 +16,7 @@ return {
 		require("lint").linters_by_ft = {
 			githubaction = { "actionlint" },
 			lua = { "selene" },
-			nix = { "statix" },
+			nix = { "deadnix" },
 		}
 	end
 }
