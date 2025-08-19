@@ -1,6 +1,11 @@
 {
   description = "getchoo's neovim config";
 
+  nixConfig = {
+    extra-substituters = [ "https://getchoo.cachix.org" ];
+    extra-trusted-public-keys = [ "getchoo.cachix.org-1:ftdbAUJVNaFonM0obRGgR5+nUmdLMM+AOvDOSx0z5tE=" ];
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
   };
