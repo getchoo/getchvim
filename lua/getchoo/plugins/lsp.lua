@@ -160,14 +160,13 @@ return {
 			{ "<leader>ca", vim.lsp.buf.code_action }
 		},
 		after = function()
-			local lspconfig = require("lspconfig")
-
 			for server, config in pairs(lsp_servers) do
 				local binary = config.binary or server
 				local options = (config.extraOptions == nil) and setup or vim.tbl_extend("keep", config.extraOptions, setup)
 
+				vim.lsp.config(server, options)
 				if vim.fn.executable(binary) == 1 then
-					lspconfig[server].setup(options)
+					vim.lsp.enable(server)
 				end
 			end
 		end
