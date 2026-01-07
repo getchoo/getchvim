@@ -125,7 +125,6 @@ return {
 				local options = (next(config) == nil) and setup or vim.tbl_extend("keep", config, setup)
 
 				vim.lsp.config(server, options)
-				print(server, binary)
 				if vim.fn.executable(binary) == 1 then
 					vim.lsp.enable(server)
 				end

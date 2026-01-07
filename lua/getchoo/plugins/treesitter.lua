@@ -3,7 +3,7 @@ return {
 	event = vim.tbl_extend("force", require("getchoo.utils").lazy_file, { "DeferredUIEnter" }),
 	after = function()
 		vim.api.nvim_create_autocmd('FileType', {
-			pattern = { '<filetype>' },
+			pattern = { '*' },
 			callback = function() vim.treesitter.start() end,
 		})
 
