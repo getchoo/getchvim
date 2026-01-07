@@ -2,11 +2,11 @@ return {
 	"nvim-treesitter",
 	event = vim.tbl_extend("force", require("getchoo.utils").lazy_file, { "DeferredUIEnter" }),
 	after = function()
-		require("nvim-treesitter.configs").setup({
-			auto_install = false,
-
-			highlight = { enable = true },
-			indent = { enable = true },
+		vim.api.nvim_create_autocmd('FileType', {
+			pattern = { '<filetype>' },
+			callback = function() vim.treesitter.start() end,
 		})
+
+		vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 	end
 }
