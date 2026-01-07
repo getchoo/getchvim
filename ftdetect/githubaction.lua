@@ -1,4 +1,4 @@
--- this allows `actionlint` to only yaml files that are actions
+-- this allows `actionlint` to only load yaml files that are actions
 if vim.g.did_load_githubaction_plugin then
 	return
 end

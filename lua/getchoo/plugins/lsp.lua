@@ -1,74 +1,49 @@
 local lsp_servers = {
-	astro = {
-		binary = "astro-ls",
-	},
+	astro = {},
 
-	bashls = {
-		binary = "bash-language-server",
-	},
+	bashls = {},
 
-	cssls = {
-		binary = "vscode-css-language-server",
-	},
+	cssls = {},
 
 	clangd = {},
 
-	denols = {
-		binary = "deno",
-	},
+	denols = {},
 
 	dprint = {},
 
-	eslint = {
-		binary = "vscode-eslint-language-server",
-	},
+	eslint = {},
 
 	harper_ls = {
-		binary = "harper-ls",
-		extraOptions = {
-			filetypes = { "markdown" }
-		}
+		filetypes = { "markdown" }
 	},
 
-	html = {
-		binary = "vscode-html-language-server",
-	},
+	html = {},
 
-	jsonls = {
-		binary = "vscode-json-language-server",
-	},
+	jsonls = {},
 
 	-- TODO: I WANT STYLUA BACK!!
 	lua_ls = {
-		binary = "lua-language-server",
-		extraOptions = {
-			settings = {
-				Lua = {
-					runtime = { version = "LuaJIT" },
-					diagnostics = { globals = "vim" },
-					workspace = { checkThirdPaty = false, library = { vim.env.VIMRUNTIME } },
-				},
+		settings = {
+			Lua = {
+				runtime = { version = "LuaJIT" },
+				diagnostics = { globals = "vim" },
+				workspace = { checkThirdPaty = false, library = { vim.env.VIMRUNTIME } },
 			},
 		},
 	},
 
-	nim_langserver = {
-		binary = "nimlangserver",
-	},
+	nim_langserver = {},
 
 	nixd = {
-		binary = "nixd",
-		extraOptions = {
-			settings = {
-				nixd = {
-					formatting = { command = { "nixfmt" } },
-					nixpkgs = {
-						expr = "import <nixpkgs> { config = { allowUnfree = true; }; overlays = [ ]; }",
-					},
-					options = {
-						nixos = {
-							expr = '((import <nixpkgs> { config = { allowUnfree = true; }; overlays = [ ]; }).nixos { }).options',
-						},
+		settings = {
+			nixd = {
+				formatting = { command = { "nixfmt" } },
+				nixpkgs = {
+					expr = "import <nixpkgs> { config = { allowUnfree = true; }; overlays = [ ]; }",
+				},
+				options = {
+					nixos = {
+						expr = '((import <nixpkgs> { config = { allowUnfree = true; }; overlays = [ ]; }).nixos { }).options',
 					},
 				},
 			},
@@ -76,51 +51,36 @@ local lsp_servers = {
 	},
 
 	pyright = {
-		extraOptions = {
-			settings = {
-				-- ruff is used instead
-				pyright = { disableOrganizeImports = true },
-				python = { ignore = { "*" } },
-			},
+		settings = {
+			-- ruff is used instead
+			pyright = { disableOrganizeImports = true },
+			python = { ignore = { "*" } },
 		},
 	},
 
 	ruff = {
-		extraOptions = {
-			on_attach = function(client, _)
-				require("lsp-format").on_attach(client)
-				-- pyright should handle this
-				client.server_capabilities.hoverProvider = false
-			end,
-		},
+		on_attach = function(client, _)
+			require("lsp-format").on_attach(client)
+			-- pyright should handle this
+			client.server_capabilities.hoverProvider = false
+		end,
 	},
 
 	rust_analyzer = {
-		binary = "rust-analyzer",
-		extraOptions = {
-			settings = {
-				["rust-analyzer"] = {
-					check = { command = "clippy" },
-				},
+		settings = {
+			["rust-analyzer"] = {
+				check = { command = "clippy" },
 			},
 		},
 	},
 
-	terraformls = {
-		binary = "terraform-ls",
-	},
+	terraformls = {},
 
-	ts_ls = {
-		binary = "typescript-language-server",
-	},
+	ts_ls = {},
 
-	typos_lsp = {
-		binary = "typos-lsp",
-	},
+	typos_lsp = {},
 
-	typst_lsp = {
-		binary = "typst-lsp",
-	},
+	typst_lsp = {},
 }
 
 local caps = vim.tbl_deep_extend(
@@ -161,10 +121,11 @@ return {
 		},
 		after = function()
 			for server, config in pairs(lsp_servers) do
-				local binary = config.binary or server
-				local options = (config.extraOptions == nil) and setup or vim.tbl_extend("keep", config.extraOptions, setup)
+				local binary = vim.lsp.config[server].cmd[1] or nil
+				local options = (next(config) == nil) and setup or vim.tbl_extend("keep", config, setup)
 
 				vim.lsp.config(server, options)
+				print(server, binary)
 				if vim.fn.executable(binary) == 1 then
 					vim.lsp.enable(server)
 				end
