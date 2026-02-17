@@ -53,7 +53,6 @@ mkNeovimWrapper {
     nixfmt
 
     # Linters
-    nodePackages.alex
     actionlint
     deadnix
   ];
