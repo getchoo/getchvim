@@ -32,7 +32,7 @@ local lsp_servers = {
 		},
 	},
 
-	["nil"] = {
+	nil_ls = {
 		settings = {
 			["nil"] = {
 				formatting = { command = { "nixfmt" } }
