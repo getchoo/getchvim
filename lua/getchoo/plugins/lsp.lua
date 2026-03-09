@@ -32,15 +32,23 @@ local lsp_servers = {
 		},
 	},
 
-	nil_ls = {
-		settings = {
-			["nil"] = {
-				formatting = { command = { "nixfmt" } }
-			}
-		}
-	},
-
 	nim_langserver = {},
+
+	nixd = {
+		settings = {
+			nixd = {
+				formatting = { command = { "nixfmt" } },
+				nixpkgs = {
+					expr = "import <nixpkgs> { config = { allowUnfree = true; }; overlays = [ ]; }",
+				},
+				options = {
+					nixos = {
+						expr = '((import <nixpkgs> { config = { allowUnfree = true; }; overlays = [ ]; }).nixos { }).options',
+					},
+				},
+			},
+		},
+	},
 
 	pyright = {
 		settings = {

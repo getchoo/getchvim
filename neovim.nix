@@ -8,7 +8,7 @@
   glow,
   harper,
   lua,
-  nil,
+  nixd,
   nixfmt,
   shellcheck,
   shfmt,
@@ -48,7 +48,7 @@ mkNeovimWrapper {
     bash-language-server
     shellcheck
     shfmt
-    nil
+    nixd
     nixfmt
 
     # Linters
