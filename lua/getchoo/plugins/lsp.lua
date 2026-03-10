@@ -35,7 +35,11 @@ local lsp_servers = {
 	nil_ls = {
 		settings = {
 			["nil"] = {
-				formatting = { command = { "nixfmt" } }
+				formatting = { command = { "nixfmt" } },
+				nix = {
+					autoArchive = false,
+					autoEvalInputs = true
+				}
 			}
 		}
 	},
