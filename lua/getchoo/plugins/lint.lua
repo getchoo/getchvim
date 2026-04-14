@@ -15,5 +15,5 @@ return {
 			lua = { "selene" },
 			nix = { "deadnix" },
 		}
-	end
+	end,
 }

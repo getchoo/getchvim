@@ -5,9 +5,7 @@
   actionlint,
   bash-language-server,
   deadnix,
-  glow,
   harper,
-  lua,
   nil,
   nixfmt,
   shellcheck,
@@ -21,24 +19,9 @@ mkNeovimWrapper {
   pname = "getchvim";
   inherit version;
 
-  luaEnv = lua.withPackages (
-    p: with p; [
-      lz-n
-
-      # Coding
-      nvim-cmp
-
-      # LSP
-      fidget-nvim
-    ]
-  );
-
   luaRc = writeText "init.lua" "require('getchoo')";
 
   runtimePrograms = [
-    # External programs
-    glow
-
     # LSP
     ## General
     typos-lsp
@@ -57,36 +40,17 @@ mkNeovimWrapper {
   ];
 
   vimPluginPackages = with vimPlugins; [
+    lz-n
     getchoo
 
-    # Editing
-    flash-nvim
-    glow-nvim
-    mini-nvim
-
     nvim-treesitter.withAllGrammars
-
-    # UI
     catppuccin-nvim
-    indent-blankline-nvim
-    lualine-nvim
-
-    # Coding
-    cmp-async-path
-    cmp-buffer
-    cmp-nvim-lsp
-
-    crates-nvim
-    ## TODO: Use luarocks plugin when it's not broken
+    fidget-nvim
     gitsigns-nvim
     nvim-lint
-    ## TODO: Ditto
-    telescope-nvim # dependent on >
-    plenary-nvim
-
-    # LSP
-    lsp-format-nvim
     nvim-lspconfig
+    plenary-nvim
+    telescope-nvim
     trouble-nvim
   ];
 }

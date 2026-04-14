@@ -5,5 +5,5 @@ return {
 		after = function()
 			require("gitsigns").setup()
 		end,
-	}
+	},
 }

@@ -13,24 +13,16 @@ return {
 				compile_path = compile_path,
 				flavour = "mocha",
 				integrations = {
-					cmp = true,
-					flash = true,
 					gitsigns = true,
-					indent_blankline = {
-						enabled = true,
-					},
-					lsp_trouble = true,
 					native_lsp = {
 						enabled = true,
 					},
-					neotree = true,
 					treesitter = true,
 					telescope = true,
-					which_key = true,
 				},
 
 				no_italic = true,
 			})
-		end
-	}
+		end,
+	},
 }

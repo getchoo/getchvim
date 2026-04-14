@@ -14,7 +14,7 @@ local lsp_servers = {
 	eslint = {},
 
 	harper_ls = {
-		filetypes = { "markdown" }
+		filetypes = { "markdown" },
 	},
 
 	html = {},
@@ -38,10 +38,10 @@ local lsp_servers = {
 				formatting = { command = { "nixfmt" } },
 				nix = {
 					autoArchive = false,
-					autoEvalInputs = true
-				}
-			}
-		}
+					autoEvalInputs = true,
+				},
+			},
+		},
 	},
 
 	nim_langserver = {},
@@ -56,7 +56,6 @@ local lsp_servers = {
 
 	ruff = {
 		on_attach = function(client, _)
-			require("lsp-format").on_attach(client)
 			-- pyright should handle this
 			client.server_capabilities.hoverProvider = false
 		end,
@@ -79,41 +78,25 @@ local lsp_servers = {
 	typst_lsp = {},
 }
 
-local caps = vim.tbl_deep_extend(
-	"force",
-	vim.lsp.protocol.make_client_capabilities(),
-	require("cmp_nvim_lsp").default_capabilities(),
-	-- for nil_ls
-	{ workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
-)
-
 local setup = {
-	on_attach = function(client, _)
-		require("lsp-format").on_attach(client)
-	end,
-
-	capabilities = caps,
+	capabilities = vim.tbl_deep_extend(
+		"force",
+		vim.lsp.protocol.make_client_capabilities(),
+		-- for nil_ls
+		{ workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
+	),
 }
 
-
 return {
-	{
-		"lspformat.nvim",
-		command = "FormatToggle",
-		keys = { { "<leader>z", "<cmd>FormatToggle<cr>" } },
-		after = function()
-			require("lsp-format").setup()
-		end
-	},
 	{
 		"nvim-lspconfig",
 		event = require("getchoo.utils").lazy_file,
 		keys = {
-			{ "<leader>e",  vim.diagnostic.open_float },
-			{ "[d",         vim.diagnostic.goto_prev },
-			{ "]d",         vim.diagnostic.goto_next },
-			{ "<leader>u",  vim.diagnostic.setloclist },
-			{ "<leader>ca", vim.lsp.buf.code_action }
+			{ "<leader>e", vim.diagnostic.open_float },
+			{ "[d", vim.diagnostic.goto_prev },
+			{ "]d", vim.diagnostic.goto_next },
+			{ "<leader>u", vim.diagnostic.setloclist },
+			{ "<leader>ca", vim.lsp.buf.code_action },
 		},
 		after = function()
 			for server, config in pairs(lsp_servers) do
@@ -125,6 +108,30 @@ return {
 					vim.lsp.enable(server)
 				end
 			end
-		end
-	}
+
+			vim.api.nvim_create_autocmd("LspAttach", {
+				group = vim.api.nvim_create_augroup("getchoo.lsp", {}),
+				callback = function(args)
+					local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+
+					if client:supports_method("textDocument/completion") then
+						vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
+					end
+
+					if
+						not client:supports_method("textDocument/willSaveWaitUntil")
+						and client:supports_method("textDocument/formatting")
+					then
+						vim.api.nvim_create_autocmd("BufWritePre", {
+							group = vim.api.nvim_create_augroup("getchoo.lsp", { clear = false }),
+							buffer = args.buf,
+							callback = function()
+								vim.lsp.buf.format({ bufnr = args.buf, id = client.id })
+							end,
+						})
+					end
+				end,
+			})
+		end,
+	},
 }

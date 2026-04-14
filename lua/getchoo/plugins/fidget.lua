@@ -5,6 +5,6 @@ return {
 		event = require("getchoo.utils").lazy_file,
 		after = function()
 			require("fidget").setup()
-		end
-	}
+		end,
+	},
 }
