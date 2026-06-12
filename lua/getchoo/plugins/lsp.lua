@@ -100,11 +100,12 @@ return {
 		},
 		after = function()
 			for server, config in pairs(lsp_servers) do
-				local binary = vim.lsp.config[server].cmd[1] or nil
+				local cmd = vim.lsp.config[server].cmd
 				local options = (next(config) == nil) and setup or vim.tbl_extend("keep", config, setup)
 
 				vim.lsp.config(server, options)
-				if vim.fn.executable(binary) == 1 then
+				-- Apparently, LSP configurations can sometimes be functions! Yay....
+				if type(cmd) == "function" or (type(cmd) == "table" and vim.fn.executable(cmd[1] or nil) == 1) then
 					vim.lsp.enable(server)
 				end
 			end
