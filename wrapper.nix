@@ -2,7 +2,7 @@
   lib,
   stdenv,
   emptyFile,
-  lua,
+  luajit,
   makeBinaryWrapper,
   neovim-unwrapped,
   neovimUtils,
@@ -30,7 +30,7 @@ let
       }@args:
 
       let
-        luaEnv = finalAttrs.luaEnv or lua.buildEnv;
+        luaEnv = finalAttrs.luaEnv or luajit.buildEnv;
         vimPluginPackages = finalAttrs.vimPluginPackages or [ ];
 
         normalizedPlugins = neovimUtils.normalizePlugins vimPluginPackages;
